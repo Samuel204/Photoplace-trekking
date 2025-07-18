@@ -61,3 +61,20 @@ Gestione File GPX:
 
   Calcolo Statistiche: Creare algoritmi per calcolare distanza totale e dislivello cumulativo dai punti del GPX.
 
+#### Frontend
+1. **Homepage (Mappa interattiva)**
+    - Mappa con marker per ogni luogo visitato (usando Leaflet o Mapbox)
+    - I marker si aprono con: nome, data, descrizione, foto e link al file GPX
+2. **Sezione "Le mie escursioni" (Lista o griglia)**
+    - Card con: immagine copertina, nome luogo, data, breve descrizione
+    - Cliccando su una card si apre la pagina del dettaglio
+3. **Pagina Dettaglio Escursione**
+    - Titolo, data, descrizione completa
+    - Foto della gita
+    - Visualizzazione del percorso GPX su mappa
+    - Dati del tracciato (dislivello, distanza, durata)
+    - Download GPX
+4. **Aggiungi nuova escursione (area privata o admin)**
+    - Form per aggiungere: titolo, descrizione, data, immagini, file GPX
+    - Upload con preview immagine e tracciato GPX mostrato direttamente
+
