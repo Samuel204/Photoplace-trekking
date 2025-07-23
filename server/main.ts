@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000
 
 // Database configuration
 const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
+  user: process.env.DB_USER || 'user',
   host: process.env.DB_HOST || 'localhost',
   database: process.env.DB_NAME || 'photoplace_trekking',
   password: process.env.DB_PASSWORD || 'password',
