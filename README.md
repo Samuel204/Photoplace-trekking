@@ -78,3 +78,7 @@ Gestione File GPX:
     - Form per aggiungere: titolo, descrizione, data, immagini, file GPX
     - Upload con preview immagine e tracciato GPX mostrato direttamente
 
+
+Resources:
+
+- [Photoplace](https://github.com/jriguera/photoplace)
