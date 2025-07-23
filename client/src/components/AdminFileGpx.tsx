@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { Escursione } from '../lib/types';
+import { form } from 'framer-motion/client';
 
 // Tipo per le notifiche toast
 type ToastProps = {
@@ -16,6 +18,7 @@ export default function AdminFileGpx() {
         difficulty: "Medio",
         gpxFile: null as File | null
     });
+    const [selectedEscursione, setSelectedEscursione] = useState<string>("");
     const [toasts, setToasts] = useState<ToastProps[]>([]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +38,6 @@ export default function AdminFileGpx() {
     };
 
     const showToast = (toast: ToastProps) => {
-        const id = Date.now();
         setToasts(prevToasts => [...prevToasts, toast]);
 
         setTimeout(() => {
@@ -43,30 +45,66 @@ export default function AdminFileGpx() {
         }, 3000);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const { title, description, difficulty, gpxFile } = formData;
 
-        if (!title || !description || !difficulty || !gpxFile) {
-            showToast({
-                title: "Errore",
-                description: "Compila tutti i campi",
-                variant: "destructive",
-            });
-            return;
+        // Prepara FormData
+        const payload = new FormData()
+        payload.append("title", title)
+        payload.append("description", description)
+        payload.append("difficulty", difficulty)
+        if (gpxFile) {
+            payload.append("gpxFile", gpxFile)
         }
 
-        console.log("Caricamento escursione:", formData);
+        console.log("Payload contents:");
+        for (let [key, value] of payload.entries()) {
+            console.log(key, value);
+        }
 
-        showToast({
-            title: "Successo",
-            description: "GPX caricato con successo!",
+        // Invia la richiesta
+        await fetch("http://localhost:3000/escursioni", {
+            method: "POST",
+            body: payload
+
+        }).then(res => {
+            if(res.ok){
+
+                showToast({
+                    title: "Successo",
+                    description: "GPX caricato con successo!",
+                });
+
+                setFormData({ title: "", description: "", difficulty: "Medio", gpxFile: null });
+            }
+        }).catch(error => {
+            showToast({
+                    title: "Errore",
+                    description: "Errore nel caricamento, riprova.",
+                });
+            console.error(error)
         });
 
-        // Reset form
-        setFormData({ title: "", description: "", difficulty: "Medio", gpxFile: null });
+        console.log("Caricamento escursione");
     };
+
+    const [escursioniList, setEscursioniList] = useState<Escursione[]>([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/escursioni/all')
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then((data: Escursione[]) => {
+                setEscursioniList(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
 
     return (
         <div className="min-h-screen p-4 bg-gray-50 dark:bg-gray-900">
@@ -84,6 +122,32 @@ export default function AdminFileGpx() {
                         Indietro
                     </button>
                 </div>
+
+
+                {/* Escursione Selector */}
+                <div className="mb-6 space-y-2">
+
+                    <label htmlFor="escursione-select" className="text-sm font-medium leading-none text-gray-800 dark:text-gray-200">
+                        Modifica un'escursione esistente o creane una nuova
+                    </label>
+
+                    <select 
+                        id="escursione-select" 
+                        value={selectedEscursione}
+                        onChange={(e) => setSelectedEscursione(e.target.value)}
+                        className="flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                    >
+                        <option value="">Seleziona un'escursione esistente</option>
+                        {escursioniList.map((escursione) => (
+                            <option key={escursione.id} value={escursione.id}>
+                                {escursione.name} - {escursione.location}
+                            </option>
+                        ))}
+                    </select>
+
+                </div>
+
+
 
                 {/* Main Card */}
                 <div className="rounded-xl border border-gray-300 bg-card text-card-foreground shadow-sm bg-white">
@@ -103,6 +167,10 @@ export default function AdminFileGpx() {
 
                     <div className="p-6 pt-0">
                         <form onSubmit={handleSubmit} className="space-y-6">
+
+                            {/* Hidden inputs */}
+                            <input type="number" name='id' value="" hidden/>
+
                             {/* Title Input */}
                             <div className="space-y-2">
                                 <label htmlFor="title" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">

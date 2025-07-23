@@ -11,9 +11,7 @@ CREATE TABLE IF NOT EXISTS escursioni (
     duration_hours INTEGER,
     distance_km DECIMAL(5,2),
     elevation_gain_m INTEGER,
-    max_participants INTEGER,
-    price DECIMAL(8,2),
-    image_url TEXT,
+    date_escursione DATE, -- Date when the escursion was made
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -28,8 +26,7 @@ INSERT INTO escursioni (
     duration_hours,
     distance_km,
     elevation_gain_m,
-    max_participants,
-    price
+    date_escursione
 ) VALUES
 (
     'Escursione al Monte Bianco',
@@ -40,8 +37,7 @@ INSERT INTO escursioni (
     8,
     15.5,
     1200,
-    12,
-    85.00
+    '2024-07-15'
 ),
 (
     'Escursione al Lago di Como',
@@ -52,8 +48,7 @@ INSERT INTO escursioni (
     6,
     12.0,
     600,
-    20,
-    55.00
+    '2024-07-16'
 ),
 (
     'Sentiero delle Cinque Terre',
@@ -64,8 +59,7 @@ INSERT INTO escursioni (
     7,
     11.0,
     400,
-    15,
-    65.00
+    '2024-07-17'
 ),
 (
     'Trekking in Val d''Orcia',
@@ -76,8 +70,7 @@ INSERT INTO escursioni (
     4,
     8.5,
     300,
-    25,
-    45.00
+    '2024-07-18'
 );
 
 -- Create gpx_files table to store GPS track data

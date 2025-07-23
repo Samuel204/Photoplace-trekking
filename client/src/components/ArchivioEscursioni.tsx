@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import CardEscursioniDetail from './ui/card-escursioni-detail';
+import type { Escursione } from '../lib/types';
 
-interface Escursione {
-    id: number;
-    name: string;
-    description: string;
-    difficulty: string;
-}
 
 interface FormattedEscursione {
     id: number;
