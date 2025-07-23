@@ -4,7 +4,8 @@ import EscursioniData from "./components/EscursioniData.tsx";
 import Header from "./components/Header.tsx";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Gallery from "./components/Gallery.tsx";
-import Admin from "./components/Admin.tsx";
+import AdminFileGpx from "./components/AdminFileGpx.tsx";
+import ArchivoEscursioni from "./components/ArchivioEscursioni.tsx";
 
 
 function App() {
@@ -23,8 +24,8 @@ function App() {
                   }
                   />
                   <Route path="/gallery" element={<Gallery/>} />
-                  <Route path="/gallery" element={<Gallery/>} />
-                  <Route path="/admin" element={<Admin/>} />
+                  <Route path="/escursioni" element={<ArchivoEscursioni/>} />
+                  <Route path="/admin" element={<AdminFileGpx/>} />
               </Routes>
           </div>
       </BrowserRouter>
