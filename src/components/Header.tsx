@@ -15,7 +15,7 @@ export default function Header() {
         },
         {
             name: "Escursioni",
-            link: "/contact",
+            link: "/escursioni",
             /*icon: (
                 <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
             ),*/
@@ -23,7 +23,7 @@ export default function Header() {
     ];
 
     return (
-        <div className="relative  w-full">
+        <div className="relative w-full">
             <FloatingNav navItems={navItems} />
         </div>
     )

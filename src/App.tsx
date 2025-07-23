@@ -4,6 +4,7 @@ import EscursioniData from "./components/EscursioniData.tsx";
 import Header from "./components/Header.tsx";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Gallery from "./components/Gallery.tsx";
+import Admin from "./components/Admin.tsx";
 
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
                   }
                   />
                   <Route path="/gallery" element={<Gallery/>} />
+                  <Route path="/gallery" element={<Gallery/>} />
+                  <Route path="/admin" element={<Admin/>} />
               </Routes>
           </div>
       </BrowserRouter>
