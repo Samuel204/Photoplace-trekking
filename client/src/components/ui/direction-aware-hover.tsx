@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
-import { cn } from "./../../lib/utils.tsx";
+import { cn } from "../../lib/utils.tsx";
 
 export const DirectionAwareHover = ({
                                         imageUrl,
