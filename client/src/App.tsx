@@ -1,6 +1,6 @@
 import HomePage from "./components/HomePage.tsx";
 import EscursioniMaps from "./components/EscursioniMaps.tsx";
-import EscursioniData from "./components/EscursioniData.tsx";
+import UltimeEscursioni from "./components/UltimeEscursioni.tsx";
 import Header from "./components/Header.tsx";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Gallery from "./components/Gallery.tsx";
@@ -19,7 +19,7 @@ function App() {
                       <>
                           <HomePage/>
                           <EscursioniMaps/>
-                          <EscursioniData/>
+                          <UltimeEscursioni/>
                       </>
                   }
                   />

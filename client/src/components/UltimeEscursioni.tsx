@@ -1,4 +1,4 @@
-// client/src/components/EscursioniData.tsx
+// client/src/components/UltimeEscursioni.tsx
 import { useState, useEffect } from "react";
 import CardEscursioniDetail from "./ui/card-escursioni-detail";
 
@@ -21,7 +21,7 @@ interface FormattedEscursione {
     elevation?: string;
 }
 
-export default function EscursioniData() {
+export default function UltimeEscursioni() {
     const [escursioni, setEscursioni] = useState<FormattedEscursione[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);

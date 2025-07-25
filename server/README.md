@@ -2,12 +2,13 @@
 
 #### Run Client
 ```bash
-npm run build <br/>
-npm run start
+cd client
+npm run dev
 ```
 
-```bash
 #### Run Server
-npm run build <br/>
+```bash
+cd server
+npm run build
 npm start
 ```

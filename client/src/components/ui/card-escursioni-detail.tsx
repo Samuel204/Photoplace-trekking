@@ -1,15 +1,11 @@
-/*
-card a se stante con id titolo descrizione
- */
-
 
 interface CardEscursioniDetailProps {
     title: string;
     date: string;
     difficulty: "Facile" | "Medio" | "Difficile";
     photoCount: number;
-    distance?: string; // Reso opzionale con ?
-    elevation?: string; // Reso opzionale con ?
+    distance?: string;
+    elevation?: string;
 }
 
 export default function CardEscursioniDetail({
