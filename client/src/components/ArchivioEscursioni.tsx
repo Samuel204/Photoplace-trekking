@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import CardEscursioniDetail from './ui/card-escursioni-detail';
 import type { Escursione } from '../lib/types';
+import { apiConfig } from '../lib/apiConfig';
 
 
 interface FormattedEscursione {
@@ -44,7 +45,7 @@ export default function ArchivoEscursioni() {
     useEffect(() => {
         const fetchEscursioni = async () => {
             try {
-                const response = await fetch('http://localhost:3000/escursioni/all');
+                const response = await fetch(apiConfig.endpoints.escursioni.getAll);
                 if (!response.ok) {
                     throw new Error('Errore nel caricamento delle escursioni');
                 }

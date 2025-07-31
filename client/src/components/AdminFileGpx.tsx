@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Escursione } from '../lib/types';
+import { apiConfig } from '../lib/apiConfig';
 
 // Tipo per le notifiche toast
 type ToastProps = {
@@ -64,7 +65,7 @@ export default function AdminFileGpx() {
         }
 
         // Invia la richiesta
-        await fetch("http://localhost:3000/escursioni", {
+        await fetch(apiConfig.endpoints.escursioni.create, {
             method: "POST",
             body: payload
 
@@ -92,7 +93,7 @@ export default function AdminFileGpx() {
     const [escursioniList, setEscursioniList] = useState<Escursione[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/escursioni/all')
+        fetch(apiConfig.endpoints.escursioni.getAll)
             .then(res => {
                 if (!res.ok) throw new Error('Network response was not ok');
                 return res.json();

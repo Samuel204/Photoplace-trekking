@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.ts",
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "10mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/main.ts"
+    }
+  ],
+  "env": {
+    "DB_USER": "@db_user",
+    "DB_HOST": "@db_host", 
+    "DB_NAME": "@db_name",
+    "DB_PASSWORD": "@db_password",
+    "DB_PORT": "@db_port"
+  }
+}

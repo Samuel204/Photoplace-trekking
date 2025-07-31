@@ -1,6 +1,7 @@
 // client/src/components/UltimeEscursioni.tsx
 import { useState, useEffect } from "react";
 import CardEscursioniDetail from "./ui/card-escursioni-detail";
+import { apiConfig } from "../lib/apiConfig";
 
 // Tipo per i dati delle escursioni provenienti dall'API
 interface Escursione {
@@ -52,7 +53,7 @@ export default function UltimeEscursioni() {
     useEffect(() => {
         const fetchEscursioni = async () => {
             try {
-                const response = await fetch("http://localhost:3000/escursioni");
+                const response = await fetch(apiConfig.endpoints.escursioni.getAll);
                 if (!response.ok) {
                     throw new Error("Errore nel caricamento dei dati");
                 }

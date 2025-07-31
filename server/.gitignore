@@ -1,0 +1,14 @@
+# Logs
+logs
+*.log
+node_modules
+
+# Dist
+dist
+.build
+
+# Environment variables
+.env
+
+# Vercel
+.vercel
