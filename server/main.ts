@@ -46,18 +46,13 @@ pool.connect((err, client, release) => {
   }
 })
 
-// Simplified CORS: allow all origins
-app.use(cors());
-app.options('*', cors()); // enable pre-flight for all routes
-
-// Manual CORS headers fallback
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
+// Configure CORS to reflect request origin and allow credentials
+const corsOptions = {
+  origin: true,          // reflect origin header
+  credentials: true,     // allow cookies and credentials
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // enable pre-flight for all routes
 
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
