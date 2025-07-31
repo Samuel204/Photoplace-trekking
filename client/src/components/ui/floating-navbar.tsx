@@ -1,7 +1,6 @@
 "use client";
 import { Link } from "react-router-dom";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     motion,
     AnimatePresence,
@@ -18,7 +17,7 @@ export const FloatingNav = ({
     navItems: {
         name: string;
         link: string;
-        icon?: React.ReactElement;
+        icon?: React.ReactNode;
     }[];
     className?: string;
 }) => {

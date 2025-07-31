@@ -216,7 +216,7 @@ INSERT INTO gpx_files (
 CREATE TABLE IF NOT EXISTS immagini_escursione (
     id SERIAL PRIMARY KEY,
     escursione_id INTEGER REFERENCES escursioni(id) ON DELETE CASCADE,
-    url TEXT NOT NULL,
+    src TEXT NOT NULL,
     caption TEXT,
     mime_type VARCHAR(50), -- Store image type (image/jpeg, image/png, etc.)
     file_size INTEGER, -- Store file size in bytes
@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS immagini_escursione (
 CREATE INDEX IF NOT EXISTS idx_immagini_escursione_escursione_id ON immagini_escursione(escursione_id);
 
 -- Insert sample image data
-INSERT INTO immagini_escursione (escursione_id, url, caption, mime_type, file_size) VALUES
+INSERT INTO immagini_escursione (escursione_id, src, caption, mime_type, file_size) VALUES
 (1, '/images/monte-bianco-1.jpg', 'Vista panoramica del Monte Bianco', 'image/jpeg', 2048576),
 (1, '/images/monte-bianco-2.jpg', 'Rifugio alpino con vista sulle Alpi', 'image/jpeg', 1856742),
 (2, '/images/lago-como-1.jpg', 'Villa del Balbianello dal lago', 'image/jpeg', 1920384),

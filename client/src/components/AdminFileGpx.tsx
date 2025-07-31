@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { API_ENDPOINTS } from '../lib/api';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Escursione } from '../lib/types';
 
@@ -65,7 +64,7 @@ export default function AdminFileGpx() {
         }
 
         // Invia la richiesta
-        await fetch(API_ENDPOINTS.escursioni.create, {
+        await fetch("http://localhost:3000/escursioni", {
             method: "POST",
             body: payload
 
