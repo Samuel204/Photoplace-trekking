@@ -1,6 +1,7 @@
 "use client";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+
+import { useState } from "react";
 import {
     motion,
     AnimatePresence,
@@ -9,17 +10,16 @@ import {
 } from "motion/react";
 import { cn } from "../../lib/utils.tsx";
 
-interface NavItem {
-    name: string;
-    link: string;
-    icon?: React.ReactNode;
-}
 
 export const FloatingNav = ({
                                 navItems,
                                 className,
                             }: {
-    navItems: NavItem[];
+    navItems: {
+        name: string;
+        link: string;
+        icon?: React.ReactElement;
+    }[];
     className?: string;
 }) => {
     const { scrollYProgress } = useScroll();
@@ -51,23 +51,18 @@ export const FloatingNav = ({
                     y: -100,
                 }}
                 animate={{
-                    y: visible ? 0 : -50,
-                    opacity: visible ? 1 : 0.5,
-                }}
-                whileHover={{
-                    y: 0,
-                    opacity: 1,
-                    transition: {duration: 0.4 }
+                    y: visible ? 0 : -100,
+                    opacity: visible ? 1 : 0,
                 }}
                 transition={{
                     duration: 0.2,
                 }}
                 className={cn(
-                    "flex max-w-fit fixed top-4 inset-x-0 mx-auto border border-transparent rounded-full backdrop-blur-2xl bg-white/30 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-10 py-3.5 items-center justify-center space-x-4",
+                    "flex max-w-fit fixed top-4 inset-x-0 mx-auto  border border-transparent rounded-full backdrop-blur-2xl bg-white/30 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-10 py-3.5 items-center justify-center space-x-4",
                     className
                 )}
             >
-                {navItems.map((navItem: NavItem, idx: number) => (
+                {navItems.map((navItem: any, idx: number) => (
                     <Link
                         key={`link=${idx}`}
                         to={navItem.link}
