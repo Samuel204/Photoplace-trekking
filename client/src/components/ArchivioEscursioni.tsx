@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import CardEscursioniDetail from './ui/card-escursioni-detail';
+import { API_ENDPOINTS } from '../lib/api';
 import type { Escursione } from '../lib/types';
 
 
@@ -44,7 +45,7 @@ export default function ArchivoEscursioni() {
     useEffect(() => {
         const fetchEscursioni = async () => {
             try {
-                const response = await fetch('http://localhost:3000/escursioni/all');
+                const response = await fetch(API_ENDPOINTS.escursioni.getAll);
                 if (!response.ok) {
                     throw new Error('Errore nel caricamento delle escursioni');
                 }

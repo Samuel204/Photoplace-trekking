@@ -1,20 +1,22 @@
 {
   "name": "photoplace-backend",
   "version": "1.0.0",
-  "description": "Backend fot Photoplace-Treking",
+  "description": "Backend for Photoplace-Trekking",
   "license": "ISC",
   "author": "",
   "type": "commonjs",
   "main": "main.ts",
   "scripts": {
     "dev": "nodemon --watch '*.ts' --exec 'ts-node' main.ts",
-    "build": "tsc",
+    "build": "tsc && tsc --project api/tsconfig.json",
     "start": "node dist/main.js",
+    "vercel-build": "echo 'Building for Vercel'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@types/multer": "^2.0.0",
     "@types/pg": "^8.15.4",
+    "@vercel/node": "^3.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
