@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Escursione } from '../lib/types';
-import { form } from 'framer-motion/client';
 
 // Tipo per le notifiche toast
 type ToastProps = {
