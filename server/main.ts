@@ -46,9 +46,10 @@ pool.connect((err, client, release) => {
   }
 })
 
-// Enable CORS with specified permissions
+// Configure CORS with dynamic origins (comma-separated list via CLIENT_ORIGIN env var)
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'https://photoplace-trekking.vercel.app').split(',');
 const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
