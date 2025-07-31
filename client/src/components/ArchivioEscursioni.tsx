@@ -44,7 +44,7 @@ export default function ArchivoEscursioni() {
     useEffect(() => {
         const fetchEscursioni = async () => {
             try {
-                const response = await fetch('http://localhost:3000/escursioni');
+                const response = await fetch('http://localhost:3000/escursioni/all');
                 if (!response.ok) {
                     throw new Error('Errore nel caricamento delle escursioni');
                 }

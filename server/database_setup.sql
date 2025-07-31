@@ -218,7 +218,6 @@ CREATE TABLE IF NOT EXISTS immagini_escursione (
     escursione_id INTEGER REFERENCES escursioni(id) ON DELETE CASCADE,
     url TEXT NOT NULL,
     caption TEXT,
-    image_data BYTEA, -- Store actual binary image data
     mime_type VARCHAR(50), -- Store image type (image/jpeg, image/png, etc.)
     file_size INTEGER, -- Store file size in bytes
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
