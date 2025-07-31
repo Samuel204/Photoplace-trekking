@@ -46,16 +46,9 @@ pool.connect((err, client, release) => {
   }
 })
 
-// Configure CORS with dynamic origins (comma-separated list via CLIENT_ORIGIN env var)
-const allowedOrigins = (process.env.CLIENT_ORIGIN || 'https://photoplace-trekking.vercel.app').split(',');
-const corsOptions = {
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-};
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // enable pre-flight for all routes
+// Simplified CORS: allow all origins
+app.use(cors());
+app.options('*', cors()); // enable pre-flight for all routes
 
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
