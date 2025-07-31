@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { API_ENDPOINTS } from '../lib/api';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Escursione } from '../lib/types';
+import { form } from 'framer-motion/client';
 
 // Tipo per le notifiche toast
 type ToastProps = {
@@ -65,7 +65,7 @@ export default function AdminFileGpx() {
         }
 
         // Invia la richiesta
-        await fetch(API_ENDPOINTS.escursioni.create, {
+        await fetch("http://localhost:3000/escursioni", {
             method: "POST",
             body: payload
 
