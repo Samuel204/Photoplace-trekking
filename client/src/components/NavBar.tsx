@@ -1,7 +1,7 @@
 import {FloatingNav} from "./ui/floating-navbar.tsx";
 
 
-export default function Header() {
+export default function NavBar() {
     const navItems = [
         {
             name: "Home",

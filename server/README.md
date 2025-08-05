@@ -9,6 +9,6 @@ npm run dev
 #### Run Server
 ```bash
 cd server
-npm run build
+npm run dev-win
 npm start
 ```

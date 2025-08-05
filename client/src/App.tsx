@@ -1,7 +1,7 @@
 import HomePage from "./components/HomePage.tsx";
 import EscursioniMaps from "./components/EscursioniMaps.tsx";
 import UltimeEscursioni from "./components/UltimeEscursioni.tsx";
-import Header from "./components/Header.tsx";
+import NavBar from "./components/NavBar.tsx";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Gallery from "./components/Gallery.tsx";
 import AdminFileGpx from "./components/AdminFileGpx.tsx";
@@ -13,7 +13,7 @@ function App() {
   return (
       <BrowserRouter>
           <div className="relative h-full w-full bg-gradient-to-b from-white to-emerald-50">
-              <Header/>
+              <NavBar/>
               <Routes>
                   <Route path="/" element={
                       <>
