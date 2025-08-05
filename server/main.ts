@@ -33,7 +33,6 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || 'password',
   port: parseInt(process.env.DB_PORT || '5432'),
   ssl: true
-  
 })
 
 // Test database connection
@@ -52,7 +51,6 @@ const corsOptions = {
   credentials: true,     // allow cookies and credentials
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // enable pre-flight for all routes
 
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
