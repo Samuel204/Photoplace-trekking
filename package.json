@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "react-use-measure": "^2.1.7"
+  }
+}
