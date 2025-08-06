@@ -71,7 +71,7 @@ app.get("/escursioni/all", async (req: Request, res: Response) => {
 })
 
 
-app.post("/escursioni", upload.single('gpxFile'), async (req: Request, res: Response) => {
+app.put("/escursioni", upload.single('gpxFile'), async (req: Request, res: Response) => {
   try {
     // Log the entire request body
     console.log('Request body:', req.body);
@@ -120,6 +120,9 @@ app.post("/escursioni", upload.single('gpxFile'), async (req: Request, res: Resp
     res.status(500).json({ error: 'Internal server error' });
   }
 })
+
+
+
 
 
 app.listen(port, () => {

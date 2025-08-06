@@ -6,7 +6,7 @@ export const apiConfig = {
   endpoints: {
     escursioni: {
       getAll: `${API_BASE_URL}/escursioni/all`,
-      create: `${API_BASE_URL}/escursioni`,
+      create: `${API_BASE_URL}/escursioni/`,
     }
   }
 };

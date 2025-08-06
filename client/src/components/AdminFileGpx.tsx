@@ -48,6 +48,16 @@ export default function AdminFileGpx() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Validate file selection
+        if (!formData.gpxFile) {
+            showToast({
+                title: "Errore",
+                description: "Seleziona un file GPX prima di inviare.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         const { title, description, difficulty, gpxFile } = formData;
 
         // Prepara FormData
@@ -66,7 +76,7 @@ export default function AdminFileGpx() {
 
         // Invia la richiesta
         await fetch(apiConfig.endpoints.escursioni.create, {
-            method: "POST",
+            method: "PUT",
             body: payload
 
         }).then(res => {
@@ -124,31 +134,6 @@ export default function AdminFileGpx() {
                 </div>
 
 
-                {/* Escursione Selector */}
-                <div className="mb-6 space-y-2">
-
-                    <label htmlFor="escursione-select" className="text-sm font-medium leading-none text-gray-800 dark:text-gray-200">
-                        Modifica un'escursione esistente o creane una nuova
-                    </label>
-
-                    <select 
-                        id="escursione-select" 
-                        value={selectedEscursione}
-                        onChange={(e) => setSelectedEscursione(e.target.value)}
-                        className="flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm dark:bg-gray-900 dark:border-gray-700 dark:text-white"
-                    >
-                        <option value="">Seleziona un'escursione esistente</option>
-                        {escursioniList.map((escursione) => (
-                            <option key={escursione.id} value={escursione.id}>
-                                {escursione.name} - {escursione.location}
-                            </option>
-                        ))}
-                    </select>
-
-                </div>
-
-
-
                 {/* Main Card */}
                 <div className="rounded-xl border border-gray-300 bg-card text-card-foreground shadow-sm bg-white">
                     <div className="flex flex-col space-y-1.5 p-6">
@@ -167,6 +152,30 @@ export default function AdminFileGpx() {
 
                     <div className="p-6 pt-0">
                         <form onSubmit={handleSubmit} className="space-y-6">
+
+                            {/* Escursione Selector */}
+                            <div className="mb-6 space-y-2">
+
+                                <label htmlFor="escursione-select" className="text-sm font-medium leading-none text-gray-800 dark:text-gray-200">
+                                    Modifica un'escursione esistente o creane una nuova
+                                </label>
+
+                                <select 
+                                    id="escursione-select" 
+                                    value={selectedEscursione}
+                                    name='id_escursione'
+                                    onChange={(e) => setSelectedEscursione(e.target.value)}
+                                    className="flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                                >
+                                    <option value="">Seleziona un'escursione esistente</option>
+                                    {escursioniList.map((escursione) => (
+                                        <option key={escursione.id} value={escursione.id}>
+                                            {escursione.name} - {escursione.location}
+                                        </option>
+                                    ))}
+                                </select>
+
+                            </div>
 
                             {/* Hidden inputs */}
                             <input type="number" name='id' value="" hidden/>
@@ -252,11 +261,11 @@ export default function AdminFileGpx() {
                                         </div>
                                         <input
                                             id="gpx-file-input"
+                                            name="gpxFile"
                                             type="file"
                                             accept=".gpx"
                                             className="hidden"
                                             onChange={handleFileChange}
-                                            required
                                         />
                                     </label>
                                 </div>
