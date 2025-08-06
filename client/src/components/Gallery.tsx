@@ -1,74 +1,51 @@
-"use client"
-import {useTransform, useScroll } from "framer-motion"
-import Lenis from '@studio-freight/lenis';
-import cloudinary from '../lib/claudinaryConfig.ts';
-import {useEffect, useRef, useState} from "react";
-import GalleryColumn from "./ui/gallery-column.tsx";
+"use client";
 
-const imageIds = [
-    'Photoplace/FotoVarie/FotoVarie_1',
+import { GridBody, DraggableContainer, GridItem } from "./ui/infinite-drag-scroll.tsx";
+import { getCloudinaryImage } from "../lib/cloudinaryUtils";
+import { AdvancedImage } from "@cloudinary/react";
+
+const imagePaths = [
     "Asiago_1",
-    "Asiago_2",
     "Asiago_3",
-    "Asiago_1",
-    "Asiago_2",
-    "Asiago_3",
-    "Asiago_1",
-    "Asiago_2",
-    "Asiago_3",
-    "Asiago_1",
-    "Asiago_2",
-    "Asiago_2",
+    "Asolo_5",
+    "FotoVarie_2",
+    "Asolo_4",
+    "Asiago_4",
+    "Posina_2",
+    "Asolo_1",
+    "Asolo_3",
+    "Asiago_6",
+    "FotoVarie_4",
+    "FotoVarie_3",
 ];
 
+const cloudinaryImages = imagePaths.map((path) =>
+    getCloudinaryImage(path, {
+        maxWidth: 500,
+        qualityLevel: "auto",
+        isLazy: true,
+    })
+);
+
 export default function Gallery() {
-
-    const [dimension, setDimension] = useState({width:0, height:0});
-    const images = imageIds.map(id => cloudinary.image(id));
-
-    const container = useRef(null);
-    const {scrollYProgress} = useScroll({
-        target: container,
-        offset: ['start end', 'end start']
-    });
-
-    const {height} = dimension;
-    const y = useTransform(scrollYProgress, [0,1], [0, height * 2])
-    const y2 = useTransform(scrollYProgress, [0, 1], [0, height * 3.3])
-    const y3 = useTransform(scrollYProgress, [0, 1], [0, height * 1.25])
-    const y4 = useTransform(scrollYProgress, [0, 1], [0, height * 3])
-
-    useEffect( () => {
-        const lenis = new Lenis()
-
-        const raf = (time: number) => {
-            lenis.raf(time)
-            requestAnimationFrame(raf)
-        }
-
-        const resize = () => {
-            setDimension({width: window.innerWidth, height: window.innerHeight})
-        }
-
-        window.addEventListener("resize", resize)
-        requestAnimationFrame(raf);
-        resize();
-
-        return () => {
-            window.removeEventListener("resize", resize);
-        }
-    },[])
-
     return (
-        <section className="relative bg-gray-700 lg:pt-24">
-            <div className=""></div>
-            <div ref={container} className="relative flex p-5 gap-10 h-[175vh] bg-[rgb(45,45,45)] box-border overflow-hidden">
-                <GalleryColumn images={[images[0], images[1], images[2]]} y={y} className="-top-[45%]"/>
-                <GalleryColumn images={[images[3], images[4], images[5]]} y={y2} className="-top-[95%]"/>
-                <GalleryColumn images={[images[6], images[7], images[8]]} y={y3} className="-top-[45%]"/>
-                <GalleryColumn images={[images[9], images[10], images[11]]} y={y4} className="-top-[75%]"/>
-            </div>
-            <div className=""></div>
-        </section>
-    )
+        <DraggableContainer variant="masonry">
+            <GridBody>
+                {cloudinaryImages.map((image, idx) => (
+                    <GridItem
+                        key={idx}
+                        className="relative h-54 w-36 md:h-96 md:w-64"
+                    >
+                        <AdvancedImage
+                            cldImg={image}
+                            alt={`Landscape ${idx + 1}`}
+                            width="500"
+                            height="500"
+                            className="rounded-lg h-20 w-20 md:h-80 md:w-72 object-cover flex-shrink-0"
+                        />
+                    </GridItem>
+                ))}
+            </GridBody>
+        </DraggableContainer>
+    );
 }

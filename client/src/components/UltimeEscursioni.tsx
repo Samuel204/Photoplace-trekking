@@ -1,17 +1,9 @@
-// client/src/components/UltimeEscursioni.tsx
 import { useState, useEffect } from "react";
 import CardEscursioniDetail from "./ui/card-escursioni-detail";
+import type { Escursione } from '../lib/types';
 import { apiConfig } from "../lib/apiConfig";
 
-// Tipo per i dati delle escursioni provenienti dall'API
-interface Escursione {
-    id: number;
-    name: string;
-    description: string;
-    difficulty: string;
-}
 
-// Tipo per il formato dei dati che serve alla CardEscursioniDetail
 interface FormattedEscursione {
     id: number;
     title: string;
@@ -27,27 +19,31 @@ export default function UltimeEscursioni() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Mappatura delle difficoltà dal server al formato del client
     const mapDifficulty = (difficulty: string): "Facile" | "Medio" | "Difficile" => {
-        switch(difficulty.toLowerCase()) {
-            case "bassa": return "Facile";
-            case "media": return "Medio";
-            case "alta": return "Difficile";
-            default: return "Medio";
+        switch (difficulty.toLowerCase()) {
+            case "bassa":
+                return "Facile";
+            case "media":
+                return "Medio";
+            case "alta":
+                return "Difficile";
+            default:
+                return "Medio";
         }
     };
 
-    // Formatta i dati dell'API nel formato necessario per la card
     const formatEscursioni = (data: Escursione[]): FormattedEscursione[] => {
-        return data.map(item => ({
-            id: item.id,
-            title: item.name,
-            date: new Date().toISOString().split('T')[0],
-            difficulty: mapDifficulty(item.difficulty),
-            photoCount: Math.floor(Math.random() * 50) + 10,
-            distance: "5,2 km", // Placeholder o dati reali dall'API
-            elevation: "350 m"  // Placeholder o dati reali dall'API
-        }));
+        return data
+            .map(item => ({
+                id: item.id,
+                title: item.name,
+                date: item.date_escursione ? new Date(item.date_escursione).toISOString().split("T")[0] : "Data non disponibile",
+                difficulty: mapDifficulty(item.difficulty),
+                photoCount: Math.floor(Math.random() * 50) + 10,
+                distance: item.distance_km != null ? String(item.distance_km) : undefined,
+                elevation: item.elevation_gain_m != null ? String(item.elevation_gain_m) : undefined,
+            }))
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     };
 
     useEffect(() => {
@@ -59,11 +55,10 @@ export default function UltimeEscursioni() {
                 }
                 const data = await response.json();
                 setEscursioni(formatEscursioni(data));
-                setLoading(false);
-            } catch (err) {
+            } catch {
                 setError("Si è verificato un errore durante il caricamento dei dati");
+            } finally {
                 setLoading(false);
-                console.error("Errore:", err);
             }
         };
 
@@ -79,16 +74,10 @@ export default function UltimeEscursioni() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-            <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-bold text-gray-900">Ultime Escursioni</h2>
-                <a href="/escursioni" className="text-emerald-600 hover:text-emerald-700 font-semibold">
-                    Vedi tutte →
-                </a>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {escursioni.map((escursione) => (
+        <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h1 className="text-3xl font-bold text-gray-900 mb-8">Ultime Escursioni</h1>
+            <div className="grid md:grid-cols-2 gap-8">
+                {escursioni.slice(0,4).map((escursione) => (
                     <CardEscursioniDetail
                         key={escursione.id}
                         title={escursione.title}

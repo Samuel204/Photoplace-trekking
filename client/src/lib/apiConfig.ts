@@ -7,6 +7,7 @@ export const apiConfig = {
     escursioni: {
       getAll: `${API_BASE_URL}/escursioni/all`,
       create: `${API_BASE_URL}/escursioni/`,
+        delete: `${API_BASE_URL}/escursioni`
     }
   }
 };

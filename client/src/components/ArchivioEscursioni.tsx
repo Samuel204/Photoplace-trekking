@@ -34,11 +34,13 @@ export default function ArchivoEscursioni() {
         return data.map(item => ({
             id: item.id,
             title: item.name,
-            date: new Date().toISOString().split('T')[0],
+            // Gestisci il caso in cui date_escursione possa essere null o undefined
+            date: item.date_escursione ? new Date(item.date_escursione).toISOString().split('T')[0] : '',
             difficulty: mapDifficulty(item.difficulty),
             photoCount: Math.floor(Math.random() * 50) + 10,
-            distance: "5,2 km", // Placeholder o dati reali dall'API
-            elevation: "350 m"  // Placeholder o dati reali dall'API
+            // Converti i valori numerici in stringhe e gestisci null
+            distance: item.distance_km != null ? String(item.distance_km) : undefined,
+            elevation: item.elevation_gain_m != null ? String(item.elevation_gain_m) : undefined,
         }));
     };
 

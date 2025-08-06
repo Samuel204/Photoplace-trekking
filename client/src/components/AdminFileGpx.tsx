@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import EliminaEscursione from "./ui/elimina-escursione.tsx";
 import { apiConfig } from '../lib/apiConfig';
 
 // Tipo per le notifiche toast
@@ -15,9 +16,11 @@ export default function AdminFileGpx() {
         title: "",
         description: "",
         difficulty: "Medio",
-        gpxFile: null as File | null
+        gpxFile: null as File | null,
+        story: "",
+        location: ""
     });
-    
+
     const [toasts, setToasts] = useState<ToastProps[]>([]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +89,13 @@ export default function AdminFileGpx() {
                     description: "GPX caricato con successo!",
                 });
 
-                setFormData({ title: "", description: "", difficulty: "Medio", gpxFile: null });
+                setFormData({ title: "", description: "", difficulty: "Medio", gpxFile: null, story: "", location: "" });
+            }else {
+                showToast({
+                    title: "Error",
+                    description: "Errore caricamento file GPX",
+                    variant: "destructive",
+                });
             }
         }).catch(error => {
             showToast({
@@ -101,7 +110,7 @@ export default function AdminFileGpx() {
 
 
     return (
-        <div className="min-h-screen p-4 bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-screen p-4 bg-gray-50">
             <div className="max-w-2xl mx-auto">
                 {/* Back Button */}
                 <div className="mb-6">
@@ -155,20 +164,53 @@ export default function AdminFileGpx() {
                                 />
                             </div>
 
-                            {/* Description Textarea */}
+                            {/* Location Textarea */}
                             <div className="space-y-2">
-                                <label htmlFor="description" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
-                                    Descrizione
+                                <label htmlFor="location" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                    Posizione
                                 </label>
-                                <textarea
-                                    id="description"
-                                    placeholder="Descrivi la tua escursione, il paesaggio, le difficoltà incontrate..."
-                                    rows={4}
-                                    required
-                                    value={formData.description}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                    className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                <input
+                                    id="location"
+                                    type="text"
+                                    placeholder="Es. Monte Bianco, Italia"
+                                    value={formData.location || ""}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                                    className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
                                 />
+                            </div>
+
+                            {/* Location and Story Fields */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Description Textarea */}
+                                <div className="space-y-2">
+                                    <label htmlFor="description" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                        Descrizione
+                                    </label>
+                                    <textarea
+                                        id="description"
+                                        placeholder="Descrivi la tua escursione, il paesaggio, le difficoltà incontrate..."
+                                        rows={4}
+                                        required
+                                        value={formData.description}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                                        className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                    />
+                                </div>
+
+                                {/* Story Textarea */}
+                                <div className="space-y-2">
+                                    <label htmlFor="story" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                        Storia
+                                    </label>
+                                    <textarea
+                                        id="story"
+                                        placeholder="Racconta la tua esperienza durante l'escursione..."
+                                        rows={4}
+                                        value={formData.story || ""}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, story: e.target.value }))}
+                                        className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                    />
+                                </div>
                             </div>
 
                             {/* Difficulty Selector */}
@@ -240,6 +282,10 @@ export default function AdminFileGpx() {
                         </form>
                     </div>
                 </div>
+                {/*Delete escursione*/}
+                <EliminaEscursione
+                    showToast={showToast}
+                />
             </div>
 
             {/* Toast Notifications */}
