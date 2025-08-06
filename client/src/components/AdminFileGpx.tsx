@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Escursione } from '../lib/types';
 import { apiConfig } from '../lib/apiConfig';
 
 // Tipo per le notifiche toast
@@ -18,7 +17,7 @@ export default function AdminFileGpx() {
         difficulty: "Medio",
         gpxFile: null as File | null
     });
-    const [selectedEscursione, setSelectedEscursione] = useState<string>("");
+    
     const [toasts, setToasts] = useState<ToastProps[]>([]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +69,7 @@ export default function AdminFileGpx() {
         }
 
         console.log("Payload contents:");
-        for (let [key, value] of payload.entries()) {
+        for (const [key, value] of payload.entries()) {
             console.log(key, value);
         }
 
@@ -100,21 +99,6 @@ export default function AdminFileGpx() {
         console.log("Caricamento escursione");
     };
 
-    const [escursioniList, setEscursioniList] = useState<Escursione[]>([]);
-
-    useEffect(() => {
-        fetch(apiConfig.endpoints.escursioni.getAll)
-            .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok');
-                return res.json();
-            })
-            .then((data: Escursione[]) => {
-                setEscursioniList(data);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, []);
 
     return (
         <div className="min-h-screen p-4 bg-gray-50 dark:bg-gray-900">
@@ -152,31 +136,6 @@ export default function AdminFileGpx() {
 
                     <div className="p-6 pt-0">
                         <form onSubmit={handleSubmit} className="space-y-6">
-
-                            {/* Escursione Selector */}
-                            <div className="mb-6 space-y-2">
-
-                                <label htmlFor="escursione-select" className="text-sm font-medium leading-none text-gray-800 dark:text-gray-200">
-                                    Modifica un'escursione esistente o creane una nuova
-                                </label>
-
-                                <select 
-                                    id="escursione-select" 
-                                    value={selectedEscursione}
-                                    name='id_escursione'
-                                    onChange={(e) => setSelectedEscursione(e.target.value)}
-                                    className="flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm dark:bg-gray-900 dark:border-gray-700 dark:text-white"
-                                >
-                                    <option value="">Seleziona un'escursione esistente</option>
-                                    {escursioniList.map((escursione) => (
-                                        <option key={escursione.id} value={escursione.id}>
-                                            {escursione.name} - {escursione.location}
-                                        </option>
-                                    ))}
-                                </select>
-
-                            </div>
-
                             {/* Hidden inputs */}
                             <input type="number" name='id' value="" hidden/>
 
