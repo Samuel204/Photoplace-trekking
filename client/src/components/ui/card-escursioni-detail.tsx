@@ -139,13 +139,13 @@ export default function CardEscursioniDetail({
                             {distance && (
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Distanza:</span>
-                                    <span className="font-medium">{distance}</span>
+                                    <span className="font-medium">{distance} km</span>
                                 </div>
                             )}
                             {elevation && (
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Dislivello:</span>
-                                    <span className="font-medium">{elevation}</span>
+                                    <span className="font-medium">{elevation} m</span>
                                 </div>
                             )}
                         </div>
