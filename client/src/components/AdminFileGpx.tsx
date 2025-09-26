@@ -116,7 +116,7 @@ export default function AdminFileGpx() {
                 <div className="mb-6">
                     <button
                         onClick={() => navigate(-1)}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 mb-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 mb-4 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
                             <path d="m12 19-7-7 7-7"/>
@@ -166,7 +166,7 @@ export default function AdminFileGpx() {
 
                             {/* Location Textarea */}
                             <div className="space-y-2">
-                                <label htmlFor="location" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                <label htmlFor="location" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
                                     Posizione
                                 </label>
                                 <input
@@ -175,7 +175,7 @@ export default function AdminFileGpx() {
                                     placeholder="Es. Monte Bianco, Italia"
                                     value={formData.location || ""}
                                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                                    className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                    className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 />
                             </div>
 
@@ -183,7 +183,7 @@ export default function AdminFileGpx() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {/* Description Textarea */}
                                 <div className="space-y-2">
-                                    <label htmlFor="description" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                    <label htmlFor="description" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
                                         Descrizione
                                     </label>
                                     <textarea
@@ -193,13 +193,13 @@ export default function AdminFileGpx() {
                                         required
                                         value={formData.description}
                                         onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                        className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                        className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]"
                                     />
                                 </div>
 
                                 {/* Story Textarea */}
                                 <div className="space-y-2">
-                                    <label htmlFor="story" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                    <label htmlFor="story" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
                                         Storia
                                     </label>
                                     <textarea
@@ -208,14 +208,14 @@ export default function AdminFileGpx() {
                                         rows={4}
                                         value={formData.story || ""}
                                         onChange={(e) => setFormData(prev => ({ ...prev, story: e.target.value }))}
-                                        className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px] dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                        className="flex w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]"
                                     />
                                 </div>
                             </div>
 
                             {/* Difficulty Selector */}
                             <div className="space-y-2">
-                                <label htmlFor="difficulty" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                <label htmlFor="difficulty" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
                                     Difficoltà
                                 </label>
                                 <div className="relative">
@@ -223,7 +223,7 @@ export default function AdminFileGpx() {
                                         id="difficulty"
                                         value={formData.difficulty}
                                         onChange={(e) => setFormData(prev => ({ ...prev, difficulty: e.target.value }))}
-                                        className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:border-gray-700 dark:text-white appearance-none pr-10"
+                                        className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none pr-10"
                                     >
                                         <option value="Facile">Facile</option>
                                         <option value="Medio">Medio</option>
@@ -243,7 +243,7 @@ export default function AdminFileGpx() {
                                     File GPX
                                 </label>
                                 <div className="flex items-center justify-center w-full">
-                                    <label htmlFor="gpx-file-input" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800/20 hover:bg-gray-100 dark:hover:bg-gray-800/40 transition-colors">
+                                    <label htmlFor="gpx-file-input" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800/20 hover:bg-gray-100 dark:hover:bg-gray-800/40 transition-colors">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400">
                                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -251,7 +251,7 @@ export default function AdminFileGpx() {
                                                 <line x1="12" x2="12" y1="3" y2="15"/>
                                             </svg>
                                             <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                                <span className="font-semibold text-blue-600 dark:text-blue-500">Clicca per caricare</span> il file GPX
+                                                <span className="font-semibold text-blue-600">Clicca per caricare</span> il file GPX
                                             </p>
                                             <p className="text-xs text-gray-500 dark:text-gray-400">Solo file .gpx</p>
                                             {formData.gpxFile && (
