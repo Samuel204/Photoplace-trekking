@@ -243,7 +243,7 @@ export default function AdminFileGpx() {
                                     File GPX
                                 </label>
                                 <div className="flex items-center justify-center w-full">
-                                    <label htmlFor="gpx-file-input" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800/20 hover:bg-gray-100 dark:hover:bg-gray-800/40 transition-colors">
+                                    <label htmlFor="gpx-file-input" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800/20 hover:bg-gray-100 dark:hover:bg-gray-800/40 transition-colors">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400">
                                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
