@@ -1,4 +1,6 @@
 import {FloatingNav} from "./ui/floating-navbar.tsx";
+import {FiHome} from "react-icons/fi";
+import {LuGalleryVerticalEnd, LuLayoutList} from "react-icons/lu";
 
 
 export default function NavBar() {
@@ -6,19 +8,18 @@ export default function NavBar() {
         {
             name: "Home",
             link: "/",
-            //icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
+            icon: <FiHome />,
         },
         {
             name: "Galleria",
             link: "/gallery",
-            //icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
+            icon: <LuGalleryVerticalEnd />,
         },
         {
             name: "Escursioni",
             link: "/escursioni",
-            /*icon: (
-                <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />
-            ),*/
+            icon:  <LuLayoutList />
+
         },
     ];
 

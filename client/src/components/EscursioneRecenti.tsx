@@ -14,7 +14,7 @@ interface FormattedEscursione {
     elevation?: string;
 }
 
-export default function UltimeEscursioni() {
+export default function EscursioneRecenti() {
     const [escursioni, setEscursioni] = useState<FormattedEscursione[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
