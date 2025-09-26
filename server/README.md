@@ -12,3 +12,5 @@ cd server
 npm run dev-win
 npm start
 ```
+
+Database: Neon postgress databse

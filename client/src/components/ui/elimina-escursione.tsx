@@ -3,7 +3,7 @@ import { apiConfig } from '../../lib/apiConfig.ts';
 
 type Escursione = {
     id: string;
-    title: string;
+    name: string;
 };
 
 type EliminaEscursioneProps = {
@@ -83,7 +83,7 @@ export default function EliminaEscursione({ onDelete, showToast }: EliminaEscurs
     return (
         <div className="mt-8 rounded-xl border border-gray-300 bg-card text-card-foreground shadow-sm bg-white">
             <div className="flex flex-col space-y-1.5 p-6">
-                <h3 className="flex items-center gap-2 text-2xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
+                <h3 className="flex items-center gap-2 text-2xl font-semibold leading-none tracking-tight text-gray-900">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
                         <path d="M3 6h18"/>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
@@ -93,7 +93,7 @@ export default function EliminaEscursione({ onDelete, showToast }: EliminaEscurs
                     </svg>
                     Elimina escursione
                 </h3>
-                <p className="text-sm text-muted-foreground text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground text-gray-500">
                     Seleziona un'escursione esistente da eliminare
                 </p>
             </div>
@@ -104,21 +104,20 @@ export default function EliminaEscursione({ onDelete, showToast }: EliminaEscurs
                         <label htmlFor="select-escursione" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
                             Escursioni disponibili
                         </label>
-                        <div className="relative">
-                            <select
-                                id="select-escursione"
-                                value={selectedEscursione}
-                                onChange={(e) => setSelectedEscursione(e.target.value)}
-                                className="flex h-10 w-full rounded-md border border-gray-200 bg-background px-3 py-2 text-sm dark:bg-gray-900 dark:border-gray-700 dark:text-white text-gray-900"
-                            >
-                                <option value="">Seleziona un'escursione da eliminare</option>
-                                {existingEscursioni.map((escursione) => (
-                                    <option key={escursione.id} value={escursione.id}>
-                                        {escursione.title}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        <select
+                            id="select-escursione"
+                            value={selectedEscursione}
+                            onChange={(e) => setSelectedEscursione(e.target.value)}
+                            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        >
+                            <option value="">Seleziona un'escursione</option>
+                            {existingEscursioni.map((escursione) => (
+                                <option key={escursione.id} value={escursione.id} className="py-4 hover:bg-gray-200">
+                                    {escursione.name}
+                                </option>
+                            ))}
+                        </select>
+
                     </div>
 
                     <button
