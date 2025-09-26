@@ -101,14 +101,14 @@ export default function EliminaEscursione({ onDelete, showToast }: EliminaEscurs
             <div className="p-6 pt-0">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label htmlFor="select-escursione" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                        <label htmlFor="select-escursione" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
                             Escursioni disponibili
                         </label>
                         <select
                             id="select-escursione"
                             value={selectedEscursione}
                             onChange={(e) => setSelectedEscursione(e.target.value)}
-                            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 mt-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         >
                             <option value="">Seleziona un'escursione</option>
                             {existingEscursioni.map((escursione) => (

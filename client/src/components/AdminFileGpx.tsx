@@ -130,7 +130,7 @@ export default function AdminFileGpx() {
                 {/* Main Card */}
                 <div className="rounded-xl border border-gray-300 bg-card text-card-foreground shadow-sm bg-white">
                     <div className="flex flex-col space-y-1.5 p-6">
-                        <h3 className="flex items-center gap-2 text-2xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
+                        <h3 className="flex items-center gap-2 text-2xl font-semibold leading-none tracking-tight text-gray-900">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="17 8 12 3 7 8"/>
@@ -138,7 +138,7 @@ export default function AdminFileGpx() {
                             </svg>
                             Carica nuova escursione
                         </h3>
-                        <p className="text-sm text-muted-foreground text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-muted-foreground text-gray-500">
                             Aggiungi i dettagli della tua escursione e carica il file GPX
                         </p>
                     </div>
@@ -150,7 +150,7 @@ export default function AdminFileGpx() {
 
                             {/* Title Input */}
                             <div className="space-y-2">
-                                <label htmlFor="title" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800 dark:text-gray-200">
+                                <label htmlFor="title" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
                                     Titolo del luogo
                                 </label>
                                 <input
@@ -160,7 +160,7 @@ export default function AdminFileGpx() {
                                     required
                                     value={formData.title}
                                     onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                    className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
+                                    className="flex h-10 w-full rounded-md border border-gray-200 border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 />
                             </div>
 
