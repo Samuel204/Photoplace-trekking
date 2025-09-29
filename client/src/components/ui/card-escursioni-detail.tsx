@@ -52,7 +52,7 @@ const DragCloseModal = ({ open, setOpen, children }: ModalProps) => {
                         initial={{ y: "100%" }}
                         animate={{ y: "0%" }}
                         transition={{ ease: "easeInOut" }}
-                        className="absolute bottom-0 h-[75vh] w-full bg-white rounded-t-3xl"
+                        className="absolute bottom-0 h-[60vh] md:h-[65vh] w-full bg-white rounded-t-3xl"
                         style={{ y }}
                         drag="y"
                         dragControls={controls}

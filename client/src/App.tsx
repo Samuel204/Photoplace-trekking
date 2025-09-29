@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Gallery from "./components/Gallery.tsx";
 import AdminFileGpx from "./components/AdminFileGpx.tsx";
 import ArchivoEscursioni from "./components/ArchivioEscursioni.tsx";
+import Contatti from "./components/Contatti.tsx";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                   />
                   <Route path="/gallery" element={<Gallery/>} />
                   <Route path="/escursioni" element={<ArchivoEscursioni/>} />
+                  <Route path="/contatti" element={ <Contatti/> } />
                   <Route path="/admin" element={<AdminFileGpx/>} />
               </Routes>
           </div>

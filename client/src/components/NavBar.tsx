@@ -1,6 +1,7 @@
 import {FloatingNav} from "./ui/floating-navbar.tsx";
 import {FiHome} from "react-icons/fi";
 import {LuGalleryVerticalEnd, LuLayoutList} from "react-icons/lu";
+import {RxPerson} from "react-icons/rx";
 
 
 export default function NavBar() {
@@ -8,12 +9,12 @@ export default function NavBar() {
         {
             name: "Home",
             link: "/",
-            icon: <FiHome />,
+            icon:  <FiHome/>,
         },
         {
             name: "Galleria",
             link: "/gallery",
-            icon: <LuGalleryVerticalEnd />,
+            icon: <LuGalleryVerticalEnd/>,
         },
         {
             name: "Escursioni",
@@ -21,10 +22,15 @@ export default function NavBar() {
             icon:  <LuLayoutList />
 
         },
+        {
+            name: "Me",
+            link: "/contatti",
+            icon: <RxPerson/>,
+        }
     ];
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full flex items-center">
             <FloatingNav navItems={navItems} />
         </div>
     )

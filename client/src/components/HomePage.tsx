@@ -68,12 +68,12 @@ export default function HomePage() {
                         <img className="object-contain w-auto h-48" src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/curved-lines.png" alt="" />
                     </div>
 
-                    <div className="relative px-4 pt-24 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
-                        <h1 className="text-4xl text-center font-bold text-white sm:text-6xl xl:text-7xl">
-                            Photoplace<br />
-                            <span className="text-2xl font-normal">Hiking Journal</span>
+                    <div className="relative px-4 pt-16 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
+                        <h1 className="text-6xl text-center font-bold text-white md:text-7xl mb-2.5">
+                            Photoplace
                         </h1>
-                        <p className="mt-8 text-xl text-white text-center">Documenta e rivivi le tue escursioni in montagna attraverso itinerari e fotografie.</p>
+                        <p className="text-2xl font-normal text-white text-center items-center tracking-wide">Hiking Journal</p>
+                        <p className="mt-8 text-xl text-white text-center">Documento e rivivo le escursioni in montagna attraverso itinerari e fotografie.</p>
 
                         <div className="grid grid-cols-2 gap-4 mt-14 sm:grid-cols-4">
                             <div className="bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors rounded-lg">

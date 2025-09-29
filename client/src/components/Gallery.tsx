@@ -41,7 +41,7 @@ export default function Gallery() {
                             alt={`Landscape ${idx + 1}`}
                             width="500"
                             height="500"
-                            className="rounded-lg h-20 w-20 md:h-80 md:w-72 object-cover flex-shrink-0"
+                            className="rounded-lg h-44 w-44 md:h-80 md:w-72 object-cover flex-shrink-0"
                         />
                     </GridItem>
                 ))}
