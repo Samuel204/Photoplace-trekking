@@ -41,11 +41,11 @@ export default function Contatti() {
                         <p className="mb-1.5 text-md">INSTAGRAM</p>
                     </div>
                     <a className="flex items-center justify-center gap-1.5 text-end text-sm uppercase text-zinc-700"
-                       href="@davidbabicc"
+                       href="https://www.instagram.com/davidbabicc/"
                        target="_blank"
                        rel="noopener noreferrer"
                     >
-                        photoplace
+                        DavidBabicc
                         <FiInstagram className="size-4" />
                     </a>
                 </div>
