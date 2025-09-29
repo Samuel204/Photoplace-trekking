@@ -29,23 +29,25 @@ const cloudinaryImages = imagePaths.map((path) =>
 
 export default function Gallery() {
     return (
-        <DraggableContainer variant="masonry">
-            <GridBody>
-                {cloudinaryImages.map((image, idx) => (
-                    <GridItem
-                        key={idx}
-                        className="relative h-54 w-36 md:h-96 md:w-64"
-                    >
-                        <AdvancedImage
-                            cldImg={image}
-                            alt={`Landscape ${idx + 1}`}
-                            width="500"
-                            height="500"
-                            className="rounded-lg h-44 w-44 md:h-80 md:w-72 object-cover flex-shrink-0"
-                        />
-                    </GridItem>
-                ))}
-            </GridBody>
+        <div className="bg-[#141414]">
+            <DraggableContainer variant="masonry">
+                <GridBody>
+                    {cloudinaryImages.map((image, idx) => (
+                        <GridItem
+                            key={idx}
+                            className="relative h-54 w-40 md:h-96 md:w-64"
+                        >
+                            <AdvancedImage
+                                cldImg={image}
+                                alt={`Landscape ${idx + 1}`}
+                                width="500"
+                                height="500"
+                                className="rounded-lg h-full w-full object-cover flex-shrink-0"
+                            />
+                        </GridItem>
+                    ))}
+                </GridBody>
         </DraggableContainer>
+        </div>
     );
 }
