@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EliminaEscursione from "./ui/elimina-escursione.tsx";
 import { apiConfig } from '../lib/apiConfig';
+import LoginModal from "./ui/login-modal.tsx";
 
 // Tipo per le notifiche toast
 type ToastProps = {
@@ -30,30 +31,68 @@ export default function AdminFileGpx() {
     const [toasts, setToasts] = useState<ToastProps[]>([]);
 
     useEffect(() => {
-        // Verifica se l'utente è già autenticato
-        const authStatus = localStorage.getItem('adminAuthenticated');
-        if (authStatus === 'true') {
-            setIsAuthenticated(true);
-            setShowLoginModal(false);
-        }
+        const checkAuth = async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+
+            try {
+                const response = await fetch(`${apiConfig.baseUrl}/auth/verify`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    setIsAuthenticated(true);
+                    setShowLoginModal(false);
+                } else {
+                    localStorage.removeItem('authToken');
+                }
+            } catch (error) {
+                console.error("Errore nella verifica dell'autenticazione:", error);
+            }
+        };
+
+        checkAuth();
     }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // prova accessi
-        if (loginData.username === 'admin' && loginData.password === 'password123') {
-            setIsAuthenticated(true);
-            setShowLoginModal(false);
-            localStorage.setItem('adminAuthenticated', 'true');
-            showToast({
-                title: "Accesso effettuato",
-                description: "Benvenuto nel pannello amministrativo",
-                variant: "success",
+
+        try {
+            const response = await fetch(`${apiConfig.baseUrl}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: loginData.username,
+                    password: loginData.password
+                })
             });
-        } else {
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('authToken', data.token);
+                setIsAuthenticated(true);
+                setShowLoginModal(false);
+                showToast({
+                    title: "Accesso effettuato",
+                    description: "Benvenuto nel pannello amministrativo",
+                    variant: "success",
+                });
+            } else {
+                showToast({
+                    title: "Errore",
+                    description: "Credenziali non valide",
+                    variant: "destructive",
+                });
+            }
+        } catch {
             showToast({
                 title: "Errore",
-                description: "Credenziali non valide",
+                description: "Problema di connessione al server",
                 variant: "destructive",
             });
         }
@@ -61,7 +100,7 @@ export default function AdminFileGpx() {
 
     const handleLogout = () => {
         setIsAuthenticated(false);
-        localStorage.removeItem('adminAuthenticated');
+        localStorage.removeItem('authToken');
         navigate('/');
     };
 
@@ -92,7 +131,6 @@ export default function AdminFileGpx() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validate file selection
         if (!formData.gpxFile) {
             showToast({
                 title: "Errore",
@@ -102,100 +140,59 @@ export default function AdminFileGpx() {
             return;
         }
 
+        const token = localStorage.getItem('authToken');
         const { title, description, difficulty, gpxFile } = formData;
 
-        // Prepara FormData
-        const payload = new FormData()
-        payload.append("title", title)
-        payload.append("description", description)
-        payload.append("difficulty", difficulty)
+        const payload = new FormData();
+        payload.append("title", title);
+        payload.append("description", description);
+        payload.append("difficulty", difficulty);
         if (gpxFile) {
-            payload.append("gpxFile", gpxFile)
+            payload.append("gpxFile", gpxFile);
         }
 
-        // Invia la richiesta
-        await fetch(apiConfig.endpoints.escursioni.create, {
-            method: "PUT",
-            body: payload
+        try {
+            const response = await fetch(apiConfig.endpoints.escursioni.create, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                body: payload
+            });
 
-        }).then(res => {
-            if(res.ok){
+            if (response.ok) {
                 showToast({
                     title: "Successo",
                     description: "GPX caricato con successo!",
                 });
-
                 setFormData({ title: "", description: "", difficulty: "Medio", gpxFile: null, story: "", location: "" });
-            }else {
+            } else {
                 showToast({
                     title: "Error",
                     description: "Errore caricamento file GPX",
                     variant: "destructive",
                 });
             }
-        }).catch(error => {
+        } catch (error) {
             showToast({
                 title: "Errore",
                 description: "Errore nel caricamento, riprova.",
             });
-            console.error(error)
-        });
+            console.error(error);
+        }
     };
 
     //popup di login
     if (!isAuthenticated) {
         return (
             <div className="min-h-screen p-4 bg-gray-50 flex items-center justify-center">
-                {showLoginModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                            <h2 className="text-2xl font-bold mb-4 text-center">Accesso Amministratore</h2>
-                            <form onSubmit={handleLogin} className="space-y-4">
-                                <div>
-                                    <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Username
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="username"
-                                        value={loginData.username}
-                                        onChange={(e) => setLoginData({...loginData, username: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        value={loginData.password}
-                                        onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div className="flex justify-between pt-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate('/')}
-                                        className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
-                                    >
-                                        Annulla
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                                    >
-                                        Accedi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
+                <LoginModal
+                    show={showLoginModal}
+                    loginData={loginData}
+                    setLoginData={setLoginData}
+                    onSubmit={handleLogin}
+                    onCancel={() => navigate('/')}
+                />
 
                 {/* Toast Notifications */}
                 <div className="fixed top-5 right-5 z-50 flex flex-col gap-2">
