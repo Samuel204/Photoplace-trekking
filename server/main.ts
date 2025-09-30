@@ -5,9 +5,7 @@ import { Pool } from 'pg'
 import multer from 'multer'
 import { parseGpx } from './utils'
 import authRoutes from './routes/authRoutes';
-import { authenticateToken } from './middleware/authMiddleware';
 
-import { log } from 'console'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -272,6 +270,19 @@ app.delete("/escursioni/:id", async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 })
+
+
+app.get("/escursioni/locations", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(
+      'SELECT escursione_id, start_latitude, start_longitude FROM gpx_files'
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching escursioni locations:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 app.listen(port, () => {
