@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EliminaEscursione from "./ui/elimina-escursione.tsx";
 import { apiConfig } from '../lib/apiConfig';
@@ -12,6 +12,12 @@ type ToastProps = {
 
 export default function AdminFileGpx() {
     const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(true);
+    const [loginData, setLoginData] = useState({
+        username: '',
+        password: ''
+    });
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -22,6 +28,42 @@ export default function AdminFileGpx() {
     });
 
     const [toasts, setToasts] = useState<ToastProps[]>([]);
+
+    useEffect(() => {
+        // Verifica se l'utente è già autenticato
+        const authStatus = localStorage.getItem('adminAuthenticated');
+        if (authStatus === 'true') {
+            setIsAuthenticated(true);
+            setShowLoginModal(false);
+        }
+    }, []);
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        // prova accessi
+        if (loginData.username === 'admin' && loginData.password === 'password123') {
+            setIsAuthenticated(true);
+            setShowLoginModal(false);
+            localStorage.setItem('adminAuthenticated', 'true');
+            showToast({
+                title: "Accesso effettuato",
+                description: "Benvenuto nel pannello amministrativo",
+                variant: "success",
+            });
+        } else {
+            showToast({
+                title: "Errore",
+                description: "Credenziali non valide",
+                variant: "destructive",
+            });
+        }
+    };
+
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        localStorage.removeItem('adminAuthenticated');
+        navigate('/');
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -71,11 +113,6 @@ export default function AdminFileGpx() {
             payload.append("gpxFile", gpxFile)
         }
 
-        console.log("Payload contents:");
-        for (const [key, value] of payload.entries()) {
-            console.log(key, value);
-        }
-
         // Invia la richiesta
         await fetch(apiConfig.endpoints.escursioni.create, {
             method: "PUT",
@@ -83,7 +120,6 @@ export default function AdminFileGpx() {
 
         }).then(res => {
             if(res.ok){
-
                 showToast({
                     title: "Successo",
                     description: "GPX caricato con successo!",
@@ -99,24 +135,95 @@ export default function AdminFileGpx() {
             }
         }).catch(error => {
             showToast({
-                    title: "Errore",
-                    description: "Errore nel caricamento, riprova.",
-                });
+                title: "Errore",
+                description: "Errore nel caricamento, riprova.",
+            });
             console.error(error)
         });
-
-        console.log("Caricamento escursione");
     };
 
+    //popup di login
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen p-4 bg-gray-50 flex items-center justify-center">
+                {showLoginModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                            <h2 className="text-2xl font-bold mb-4 text-center">Accesso Amministratore</h2>
+                            <form onSubmit={handleLogin} className="space-y-4">
+                                <div>
+                                    <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Username
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        value={loginData.username}
+                                        onChange={(e) => setLoginData({...loginData, username: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        value={loginData.password}
+                                        onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex justify-between pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/')}
+                                        className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+                                    >
+                                        Annulla
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                                    >
+                                        Accedi
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Toast Notifications */}
+                <div className="fixed top-5 right-5 z-50 flex flex-col gap-2">
+                    {toasts.map((toast, index) => (
+                        <div
+                            key={index}
+                            className={`p-4 rounded-lg shadow-lg text-white transform transition-all duration-300 translate-y-0 opacity-100 ${
+                                toast.variant === 'destructive' ? 'bg-red-600' : 'bg-green-600'
+                            }`}
+                            style={{animation: 'fadeIn 0.3s ease-out'}}
+                        >
+                            <strong className="block mb-1">{toast.title}</strong>
+                            <p className="text-sm">{toast.description}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen p-4 bg-gray-50">
             <div className="max-w-2xl mx-auto">
-                {/* Back Button */}
-                <div className="mb-6">
+                {/* Header with Back and Logout */}
+                <div className="mb-6 flex justify-between items-center">
                     <button
                         onClick={() => navigate(-1)}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 mb-4 text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
                             <path d="m12 19-7-7 7-7"/>
@@ -124,10 +231,20 @@ export default function AdminFileGpx() {
                         </svg>
                         Indietro
                     </button>
+
+                    <button
+                        onClick={handleLogout}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-red-600 text-white hover:bg-red-700"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Logout
+                    </button>
                 </div>
 
-
-                {/* Main Card */}
                 <div className="rounded-xl border border-gray-300 bg-card text-card-foreground shadow-sm bg-white">
                     <div className="flex flex-col space-y-1.5 p-6">
                         <h3 className="flex items-center gap-2 text-2xl font-semibold leading-none tracking-tight text-gray-900">
@@ -145,9 +262,7 @@ export default function AdminFileGpx() {
 
                     <div className="p-6 pt-0">
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Hidden inputs */}
                             <input type="number" name='id' value="" hidden/>
-
                             {/* Title Input */}
                             <div className="space-y-2">
                                 <label htmlFor="title" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-800">
@@ -282,10 +397,9 @@ export default function AdminFileGpx() {
                         </form>
                     </div>
                 </div>
-                {/*Delete escursione*/}
-                <EliminaEscursione
-                    showToast={showToast}
-                />
+
+                {/* Delete escursione */}
+                <EliminaEscursione showToast={showToast} />
             </div>
 
             {/* Toast Notifications */}
