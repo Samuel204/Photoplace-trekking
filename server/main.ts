@@ -58,7 +58,7 @@ app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.send('Alive');
 })
 
 app.get("/escursioni/all", async (req: Request, res: Response) => {
@@ -211,7 +211,63 @@ app.put("/escursioni", upload.single('gpxFile'), async (req: Request, res: Respo
 })
 
 
-
+app.delete("/escursioni/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    
+    // Validate that id is a number
+    const escursioneId = parseInt(id);
+    if (isNaN(escursioneId)) {
+      return res.status(400).json({ error: 'Invalid escursione ID' });
+    }
+    
+    // Start a transaction to ensure both deletions succeed or fail together
+    const client = await pool.connect();
+    
+    try {
+      await client.query('BEGIN');
+      
+      // First, delete related GPX files
+      const gpxDeleteResult = await client.query(
+        'DELETE FROM gpx_files WHERE escursione_id = $1',
+        [escursioneId]
+      );
+      
+      // Then, delete the escursione
+      const escursioneDeleteResult = await client.query(
+        'DELETE FROM escursioni WHERE id = $1',
+        [escursioneId]
+      );
+      
+      // Check if the escursione existed
+      if (escursioneDeleteResult.rowCount === 0) {
+        await client.query('ROLLBACK');
+        return res.status(404).json({ error: 'Escursione not found' });
+      }
+      
+      await client.query('COMMIT');
+      
+      console.log(`Successfully deleted escursione ${escursioneId} and ${gpxDeleteResult.rowCount} related GPX files`);
+      
+      res.json({ 
+        success: true, 
+        message: 'Escursione deleted successfully',
+        deletedEscursioneId: escursioneId,
+        deletedGpxFiles: gpxDeleteResult.rowCount
+      });
+      
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+    
+  } catch (error) {
+    console.error('Error deleting escursione:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
 
 
 app.listen(port, () => {
