@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { apiConfig } from "../lib/apiConfig";
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-// prendere dati da GET /api/escursioni/locations
+
+const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY || '';
 
 interface LocationData {
     id: number;
     name: string;
-    latitude: number;
-    longitude: number;
+    start_latitude: string;
+    start_longitude: string;
 }
 
 export default function EscursioniMaps() {
@@ -43,8 +46,42 @@ export default function EscursioniMaps() {
     }, [loading, error, locations]);
 
     const initializeMap = () => {
-        // mappa
-        console.log("Dati mappa disponibili:", locations);
+        const mapContainer = document.getElementById("map") as HTMLDivElement;
+
+        function getCenter(points: LocationData[]) {
+            let sumLat = 0;
+            let sumLng = 0;
+            points.forEach(p => {
+                sumLat += parseFloat(p.start_latitude);
+                sumLng += parseFloat(p.start_longitude);
+            });
+            return {
+                latitude: sumLat / points.length,
+                longitude: sumLng / points.length
+            };
+        }
+
+        const centerPoint = getCenter(locations);
+
+        mapboxgl.accessToken = MAPBOX_API_KEY;
+        const map = new mapboxgl.Map({
+        container: mapContainer, // your container ID
+        style: 'mapbox://styles/mapbox/satellite-v9', // map style
+        center: [centerPoint.longitude, centerPoint.latitude], // starting position [lng, lat]
+        zoom: 4 // starting zoom
+        });
+
+        // Fore every location, add a marker
+        locations.forEach(loc => {
+            new mapboxgl.Marker()
+            .setLngLat([parseFloat(loc.start_longitude), parseFloat(loc.start_latitude)])
+            .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`
+                <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                    <strong style="color: #2c7a7b;">${loc.name}</strong><br>
+                </div>
+            `))
+            .addTo(map);
+        });
     };
 
     return (
@@ -67,6 +104,7 @@ export default function EscursioniMaps() {
                         {error && <p className="text-red-600">Errore: {error}</p>}
                         <div id="map" ref={mapRef} className="w-full h-full"></div>
                     </div>
+                    <link href='https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css' rel='stylesheet' />
                 </div>
             </div>
         </section>

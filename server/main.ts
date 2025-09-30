@@ -275,7 +275,7 @@ app.delete("/escursioni/:id", async (req: Request, res: Response) => {
 app.get("/escursioni/locations", async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
-      'SELECT escursione_id, start_latitude, start_longitude FROM gpx_files'
+      'SELECT gpx_files.escursione_id, gpx_files.start_latitude, gpx_files.start_longitude, escursioni.name FROM gpx_files JOIN escursioni ON gpx_files.escursione_id = escursioni.id'
     );
     res.json(result.rows);
   } catch (error) {
