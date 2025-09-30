@@ -1,5 +1,8 @@
 
 export default function EscursioniMaps() {
+
+    // prendere dati da GET /api/escursioni/locations
+
     return (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 z-20 mt-10">
             <div className="overflow-hidden rounded-lg bg-white border border-gray-100">
