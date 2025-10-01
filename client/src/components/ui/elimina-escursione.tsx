@@ -50,31 +50,44 @@ export default function EliminaEscursione({ onDelete, showToast }: EliminaEscurs
             return;
         }
 
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            showToast({
+                title: "Errore",
+                description: "Sessione scaduta, effettua nuovamente il login",
+                variant: "destructive",
+            });
+            return;
+        }
+
         try {
-            const response = await fetch(`${apiConfig.endpoints.escursioni.delete}/${selectedEscursione}`, {
+            const deleteUrl = apiConfig.endpoints.escursioni.delete(selectedEscursione);
+
+            const response = await fetch(deleteUrl, {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
             });
 
             if (response.ok) {
                 showToast({
                     title: "Successo",
                     description: "Escursione eliminata con successo!",
+                    variant: "success"
                 });
                 setSelectedEscursione("");
                 fetchEscursioni();
                 if (onDelete) onDelete();
             } else {
-                showToast({
-                    title: "Errore",
-                    description: "Impossibile eliminare l'escursione",
-                    variant: "destructive",
-                });
+                throw new Error("Risposta non valida dal server");
             }
         } catch (error) {
             console.error("Errore nell'eliminazione dell'escursione:", error);
             showToast({
                 title: "Errore",
-                description: "Errore nell'eliminazione, riprova.",
+                description: "Errore di connessione al server",
                 variant: "destructive",
             });
         }

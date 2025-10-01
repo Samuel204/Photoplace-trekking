@@ -5,7 +5,7 @@ import {CiLinkedin} from "react-icons/ci";
 export default function Contatti() {
     return (
         <div className="flex flex-col z-50 min-h-screen mt-14">
-            <div className="mx-auto max-w-5xl p-5 md:p-16 text-black font-primary w-full rounded-lg relative overflow-hidden bg-white/30 backdrop-blur-3xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(255,255,255,0.1),inset_0_0_8px_4px_rgba(255,255,255,0.4)] before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent after:content-[''] after:absolute after:top-0 after:left-0 after:w-[1px] after:h-full after:bg-gradient-to-b after:from-white/80 after:via-transparent after:to-white/30">
+            <div className="mx-auto max-w-5xl p-5 md:p-16 text-black font-primary w-full rounded-xl relative overflow-hidden bg-white/30 backdrop-blur-3xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(255,255,255,0.1),inset_0_0_8px_4px_rgba(255,255,255,0.4)] before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/80 before:to-transparent after:content-[''] after:absolute after:top-0 after:left-0 after:w-[1px] after:h-full after:bg-gradient-to-b after:from-white/80 after:via-transparent after:to-white/30">
                 <div>
                     <h2 className="flex flex-row items-center mb-5 text-3xl font-bold text-dark sm:text-[30px]/[40px]">
                         Raggiungi i tuoi obiettivi...

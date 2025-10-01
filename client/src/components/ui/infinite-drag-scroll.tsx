@@ -124,10 +124,11 @@ export const DraggableContainer = ({
 export const GridItem = ({
                              children,
                              className,
+                             ...props
                          }: {
     children: React.ReactNode;
     className?: string;
-}) => {
+} & React.ComponentProps<typeof motion.div>) => {
     const variant = useContext(GridVariantContext);
 
     const gridItemStyles = cva(
@@ -144,7 +145,7 @@ export const GridItem = ({
             defaultVariants: {
                 variant: "default",
             },
-        },
+        }
     );
 
     return (
@@ -153,6 +154,7 @@ export const GridItem = ({
             variants={rowVariants}
             initial="initial"
             animate="animate"
+            {...props}
         >
             {children}
         </motion.div>

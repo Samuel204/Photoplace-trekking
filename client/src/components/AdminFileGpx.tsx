@@ -164,6 +164,7 @@ export default function AdminFileGpx() {
                 showToast({
                     title: "Successo",
                     description: "GPX caricato con successo!",
+                    variant: "success"
                 });
                 setFormData({ title: "", description: "", difficulty: "Medio", gpxFile: null, story: "", location: "" });
             } else {
@@ -231,7 +232,7 @@ export default function AdminFileGpx() {
 
                     <button
                         onClick={handleLogout}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-red-600 text-white hover:bg-red-700"
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 text-gray-700 hover:bg-accent hover:text-accent-foreground hover:bg-gray-100"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
