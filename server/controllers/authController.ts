@@ -1,4 +1,3 @@
-// server/controllers/authController.ts
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -13,8 +12,7 @@ export const login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
 
     try {
-        // In un'implementazione reale, queste credenziali sarebbero nel database
-        const validUsername = process.env.ADMIN_USERNAME || 'admin';
+        const validUsername = process.env.ADMIN_USERNAME;
         const validPasswordHash = process.env.ADMIN_PASSWORD_HASH || '$2b$10$qXByHhVtJnflWfRXEQE4tOqjK9oUgrldTAd1mtEDZAC0n.ZIb4wsO';
 
         if (username !== validUsername) {
