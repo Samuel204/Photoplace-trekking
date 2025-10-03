@@ -13,7 +13,7 @@ export const login = async (req: Request, res: Response) => {
 
     try {
         const validUsername = process.env.ADMIN_USERNAME;
-        const validPasswordHash = process.env.ADMIN_PASSWORD_HASH || '$2b$10$qXByHhVtJnflWfRXEQE4tOqjK9oUgrldTAd1mtEDZAC0n.ZIb4wsO';
+        const validPasswordHash = process.env.ADMIN_PASSWORD_HASH || '$2b$10$xGe9KIl55fg9D2cirTE9lOjrFTpvC9YJYSXLcpXbNuQ232ZNHKAPu';
 
         if (username !== validUsername) {
             return res.status(401).json({ message: 'Credenziali non valide' });
