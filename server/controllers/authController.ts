@@ -13,7 +13,12 @@ export const login = async (req: Request, res: Response) => {
 
     try {
         const validUsername = process.env.ADMIN_USERNAME;
-        const validPasswordHash = process.env.ADMIN_PASSWORD_HASH || '$2b$10$xGe9KIl55fg9D2cirTE9lOjrFTpvC9YJYSXLcpXbNuQ232ZNHKAPu';
+        const validPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+
+        if(!validUsername || !validPasswordHash) {
+            console.error('Configurazione di autenticazione mancante');
+            return res.status(500).json({ message: 'Errore di configurazione server' });
+        }
 
         if (username !== validUsername) {
             return res.status(401).json({ message: 'Credenziali non valide' });
