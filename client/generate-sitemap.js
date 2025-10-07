@@ -13,7 +13,7 @@ async function generateSitemap() {
     sitemap.end();
 
     const data = await streamToPromise(sitemap);
-    createWriteStream(resolve('client/public', 'sitemap.xml')).end(data);
+    createWriteStream(resolve('public', 'sitemap.xml')).end(data);
 }
 
 generateSitemap().then(() => {
