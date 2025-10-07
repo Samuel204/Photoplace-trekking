@@ -2,7 +2,8 @@ import {FiMapPin} from "react-icons/fi";
 import {FaSquareInstagram} from "react-icons/fa6";
 import {MdCamera, MdEmail} from "react-icons/md";
 import {ImLinkedin} from "react-icons/im";
-import Img1 from "../assets/Posina_1.webp";
+import {AdvancedImage} from "@cloudinary/react";
+import {getCloudinaryImage} from "../lib/cloudinaryUtils.ts";
 
 export default function Contatti() {
 
@@ -25,7 +26,15 @@ export default function Contatti() {
             <div className="flex-shrink group relative mb-5 md:mb-0 w-full h-[350px] max-w-xs md:w-[450px] md:h-[450px] md:max-w-md bg-gray-100/30  rounded-[32px] p-[3px] shadow-[0_70px_30px_-50px_rgba(96,75,74,0.19)] transition-all duration-500 ease-in-out hover:rounded-tl-[55px]">
                 {/* Profile Picture */}
                 <div className="absolute w-[calc(100%-6px)] h-[calc(100%-6px)] top-[3px] left-[3px] rounded-[29px] z-[1] border-0 border-gray-900/50 overflow-hidden transition-all duration-500 ease-in-out delay-200 group-hover:w-[100px] group-hover:h-[100px] group-hover:top-[10px] group-hover:left-[10px] group-hover:rounded-full group-hover:z-[3] group-hover:border-[7px] group-hover:shadow-[0_5px_5px_0_rgba(96,75,74,0.19)] group-hover:delay-0">
-                    <img src={Img1} alt="David Babic" className="w-full h-full object-cover"/>
+                    <AdvancedImage cldImg={getCloudinaryImage("Posina_1",
+                        {
+                            maxWidth: 800,
+                            qualityLevel: "auto",
+                            isLazy: false,
+                        })}
+                                   alt="David Babic"
+                                   className="w-full h-full object-cover"
+                    />
                 </div>
                 {/* Bottom Section */}
                 <div className="absolute bottom-[3px] left-[3px] right-[3px] bg-gray-100 top-[80%] rounded-[29px] z-[2] shadow-[0_5px_5px_0_rgba(96,75,74,0.19)_inset] overflow-hidden transition-all duration-500 cubic-bezier(0.645,0.045,0.355,1) group-hover:top-[20%] group-hover:rounded-[80px_29px_29px_29px] group-hover:delay-200">
@@ -41,7 +50,7 @@ export default function Contatti() {
                     </div>
 
                     {/* Bottom Section */}
-                    <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between">
+                    <div className="absolute bottom-3 left-6 right-6 flex items-center justify-between">
                         {/* Social Links */}
                         <div className="flex items-center justify-center gap-3 md:gap-5">
                             <span className="flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 duration-300 transition-colors size-9 size-10">

@@ -4,7 +4,7 @@ import { getCloudinaryImage } from "../lib/cloudinaryUtils";
 import { AdvancedImage } from "@cloudinary/react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-
+import {useEffect} from "react";
 
 
 const imagePaths = [
@@ -40,6 +40,11 @@ const cloudinaryImages = imagePaths.map((path) =>
 
 export default function Gallery() {
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+    const [isHighQualityLoaded, setIsHighQualityLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsHighQualityLoaded(false);
+    }, [selectedIdx]);
 
     return (
         <div className="bg-[#141414] relative">
@@ -78,12 +83,29 @@ export default function Gallery() {
                             className="relative"
                             onClick={e => e.stopPropagation()}
                         >
+                            {/* Immagine bassa qualità (rimane sotto) */}
                             <AdvancedImage
                                 cldImg={cloudinaryImages[selectedIdx]}
                                 alt={`Landscape ${selectedIdx + 1}`}
-                                width="800"
-                                height="800"
-                                className="rounded-lg max-h-[80vh] max-w-[90vw] object-contain"
+                                width="500"
+                                height="500"
+                                className={`rounded-lg max-h-[80vh] max-w-[90vw] object-contain transition-opacity duration-500 ${isHighQualityLoaded ? 'opacity-0' : 'opacity-100'}`}
+                            />
+                            {/* Immagine alta qualità sovrapposta */}
+                            <AdvancedImage
+                                cldImg={getCloudinaryImage(imagePaths[selectedIdx], {
+                                    maxWidth: 1200,
+                                    qualityLevel: "auto:best",
+                                    isLazy: false,
+                                })}
+                                alt={`Landscape ${selectedIdx + 1}`}
+                                width="500"
+                                height="500"
+                                onLoad={(e: { currentTarget: { style: { opacity: string; }; }; }) => {
+                                    e.currentTarget.style.opacity = "1";
+                                    setIsHighQualityLoaded(true);
+                                }}
+                                className="rounded-lg max-h-[80vh] max-w-[90vw] object-contain absolute inset-0 opacity-0 transition-opacity duration-500"
                             />
                         </motion.div>
                     </motion.div>
