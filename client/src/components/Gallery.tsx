@@ -5,30 +5,8 @@ import { AdvancedImage } from "@cloudinary/react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {useEffect} from "react";
+import {imagePaths} from "./data/imagePaths.ts";
 
-
-const imagePaths = [
-    "Asiago_1",
-    "Asiago_3",
-    "Asolo_5",
-    "FotoVarie_2",
-    "Asolo_4",
-    "Asiago_4",
-
-    "Posina_2",
-    "Asolo_1",
-    "Asolo_3",
-    "Asiago_6",
-    "FotoVarie_4",
-    "FotoVarie_3",
-
-    "Posina_1",
-    "FotoVarie_4",
-    "Tonezza_1",
-    "Posina_1",
-    "Posina_4",
-    "Posina_3",
-];
 
 const cloudinaryImages = imagePaths.map((path) =>
     getCloudinaryImage(path, {

@@ -19,19 +19,23 @@ export const DirectionAwareHover = ({
     className?: string;
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-
+    const [isHovered, setIsHovered] = useState(false);
     const [direction, setDirection] = useState<
         "top" | "bottom" | "left" | "right" | string
     >("left");
 
-    const handleMouseEnter = (
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    const handleMove = (
+        clientX: number,
+        clientY: number
     ) => {
         if (!ref.current) return;
 
-        const direction = getDirection(event, ref.current);
-        console.log("direction", direction);
-        switch (direction) {
+        const { width: w, height: h, left, top } = ref.current.getBoundingClientRect();
+        const x = clientX - left - (w / 2) * (w > h ? h / w : 1);
+        const y = clientY - top - (h / 2) * (h > w ? w / h : 1);
+        const d = Math.round(Math.atan2(y, x) / 1.57079633 + 5) % 4;
+
+        switch (d) {
             case 0:
                 setDirection("top");
                 break;
@@ -50,20 +54,45 @@ export const DirectionAwareHover = ({
         }
     };
 
-    const getDirection = (
-        ev: React.MouseEvent<HTMLDivElement, MouseEvent>,
-        obj: HTMLElement
+    const handleMouseEnter = (
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => {
-        const { width: w, height: h, left, top } = obj.getBoundingClientRect();
-        const x = ev.clientX - left - (w / 2) * (w > h ? h / w : 1);
-        const y = ev.clientY - top - (h / 2) * (h > w ? w / h : 1);
-        const d = Math.round(Math.atan2(y, x) / 1.57079633 + 5) % 4;
-        return d;
+        setIsHovered(true);
+        handleMove(event.clientX, event.clientY);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
+    const handleTouchStart = (
+        event: React.TouchEvent<HTMLDivElement>
+    ) => {
+        if (event.touches.length > 0) {
+            setIsHovered(true);
+            handleMove(event.touches[0].clientX, event.touches[0].clientY);
+        }
+    };
+
+    const handleTouchMove = (
+        event: React.TouchEvent<HTMLDivElement>
+    ) => {
+        if (event.touches.length > 0) {
+            handleMove(event.touches[0].clientX, event.touches[0].clientY);
+        }
+    };
+
+    const handleTouchEnd = () => {
+        setIsHovered(false);
     };
 
     return (
         <motion.div
             onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             ref={ref}
             className={cn(
                 "md:h-[100vh] w-60 h-60 md:w-full bg-transparent overflow-hidden group/card relative",
@@ -74,10 +103,15 @@ export const DirectionAwareHover = ({
                 <motion.div
                     className="relative h-full w-full"
                     initial="initial"
-                    whileHover={direction}
+                    animate={isHovered ? direction : "initial"}
                     exit="exit"
                 >
-                    <motion.div className="group-hover/card:block hidden absolute inset-0 w-full h-full bg-black/40 z-10 transition duration-500" />
+                    <motion.div
+                        className={cn(
+                            "absolute inset-0 w-full h-full bg-black/40 z-10 transition duration-500",
+                            isHovered ? "block" : "hidden"
+                        )}
+                    />
                     <motion.div
                         variants={variants}
                         className="h-full w-full relative bg-gray-50"
@@ -119,8 +153,8 @@ export const DirectionAwareHover = ({
 const variants = {
     initial: {
         x: 0,
+        y: 0,
     },
-
     exit: {
         x: 0,
         y: 0,

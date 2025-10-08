@@ -8,12 +8,14 @@ export default function HomePage() {
     const [escursioniCount, setEscursioniCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(true);
     const [totalDistance, setTotalDistance] = useState<number>(0);
+    const [averageElevation, setAverageElevation] = useState<number>(0);
 
 
     const imageUrl =
         "https://images.unsplash.com/photo-1663765970236-f2acfde22237?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
     useEffect(() => {
+        let isMounted = true;
         const fetchEscursioniData = async () => {
             try {
                 const response = await fetch(apiConfig.endpoints.escursioni.getAll);
@@ -21,22 +23,43 @@ export default function HomePage() {
                     throw new Error('Errore nel caricamento delle escursioni');
                 }
                 const data = await response.json();
-                setEscursioniCount(data.length);
+                if (isMounted) {
+                    setEscursioniCount(data.length);
 
-                // Calcola la distanza totale km
-                const totalKm = data.reduce((sum: number, escursione: Escursione) => {
-                    return sum + (escursione.distance_km ? Number(escursione.distance_km) : 0);
-                }, 0);
+                    // Calcola la distanza totale km
+                    const totalKm = data.reduce((sum: number, escursione: Escursione) => {
+                        return sum + (escursione.distance_km ? Number(escursione.distance_km) : 0);
+                    }, 0);
 
-                setTotalDistance(totalKm);
+                    //Calcolo media disliveli
+                    const dislivelloEscursioni = data.filter((escursione: Escursione) =>
+                        escursione.elevation_gain_m && Number(escursione.elevation_gain_m) > 0
+                    );
+                    let avgElev = 0;
+                    if(dislivelloEscursioni.length > 0){
+                        const totalElev = dislivelloEscursioni.reduce((sum: number, escursione: Escursione) => {
+                            return sum + Number(escursione.elevation_gain_m);
+                            }, 0);
+                        avgElev = totalElev / dislivelloEscursioni.length;
+                    }
+                    setTotalDistance(totalKm);
+                    setAverageElevation(avgElev);
+                }
             } catch (err) {
-                console.error('Errore durante il recupero dei dati escursioni:', err);
+                if (isMounted) {
+                    console.error('Errore durante il recupero dei dati escursioni:', err);
+                }
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         fetchEscursioniData();
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return (
@@ -113,7 +136,9 @@ export default function HomePage() {
                                         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                         <circle cx="12" cy="10" r="3"></circle>
                                     </svg>
-                                    <div className="text-2xl font-bold text-white">12450m</div>
+                                    <div className="text-2xl font-bold text-white">
+                                        {loading ? '...' : `${averageElevation.toFixed(0)}m`}
+                                    </div>
                                     <div className="text-sm text-orange-200">Dislivello</div>
                                 </div>
                             </div>
