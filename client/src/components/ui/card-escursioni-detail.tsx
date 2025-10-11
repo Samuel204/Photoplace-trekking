@@ -1,5 +1,8 @@
-import {useState } from "react";
+import {useState} from "react";
 import DragCloseModal from "./modal-drag.tsx";
+import ImgDislivello from "../../assets/dislivello.svg"
+import EscursioneModalContent from "./escursione-modal-content.tsx";
+
 
 interface CardEscursioniDetailProps {
     title: string;
@@ -34,6 +37,49 @@ export default function CardEscursioniDetail({
         }
     };
 
+    const difficultyMap = {
+        Facile: 20,
+        Medio: 55,
+        Difficile: 100,
+    };
+    const data = [
+        {
+            label: "Difficoltà",
+            value: difficultyMap[difficulty] || 0,
+            icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     strokeLinejoin="round" className="mx-auto text-emerald-400">
+                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                </svg>
+            ),
+
+        },
+        {
+            label: "Distanza",
+            value: distance ? Math.min(Number(distance) / 30 * 100, 100) : 0,
+            icon: (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     strokeLinejoin="round" className="mx-auto text-sky-400">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                    <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+            ),
+        },
+        {
+            label: "Dislivello",
+            value: elevation ? Math.min((Number(elevation) / 2800) *100, 100) : 0,
+            icon: (
+                <img
+                    src={ImgDislivello}
+                    alt=""
+                />
+            ),
+        },
+    ];
+
+
     return (
         <>
             <div
@@ -55,11 +101,13 @@ export default function CardEscursioniDetail({
                             strokeLinejoin="round"
                             className="w-12 h-12 text-white/80"
                         >
-                            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                            <path
+                                d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
                             <circle cx="12" cy="13" r="3"></circle>
                         </svg>
                     </div>
-                    <div className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 absolute top-4 right-4 bg-white/90 text-gray-800 hover:bg-white">
+                    <div
+                        className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 absolute top-4 right-4 bg-white/90 text-gray-800 hover:bg-white">
                         {photoCount} foto
                     </div>
                 </div>
@@ -93,13 +141,13 @@ export default function CardEscursioniDetail({
             </div>
 
             <DragCloseModal open={open} setOpen={setOpen}>
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold">{title}</h2>
-                    <p className="mt-4 text-gray-600">{date}</p>
-                    <p className="mt-2 text-gray-500">Difficoltà: {difficulty}</p>
-                    {distance && <p className="mt-2 text-gray-500">Distanza: {distance}</p>}
-                    {elevation && <p className="mt-2 text-gray-500">Dislivello: {elevation}</p>}
-                </div>
+                <EscursioneModalContent
+                    title={title}
+                    date={date}
+                    data={data}
+                    distance={distance}
+                    elevation={elevation}
+                />
             </DragCloseModal>
         </>
     );
