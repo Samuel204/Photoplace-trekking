@@ -1,6 +1,5 @@
 import {useState} from "react";
 import DragCloseModal from "./modal-drag.tsx";
-import ImgDislivello from "../../assets/dislivello.svg"
 import EscursioneModalContent from "./escursione-modal-content.tsx";
 
 
@@ -37,47 +36,6 @@ export default function CardEscursioniDetail({
         }
     };
 
-    const difficultyMap = {
-        Facile: 20,
-        Medio: 55,
-        Difficile: 100,
-    };
-    const data = [
-        {
-            label: "Difficoltà",
-            value: difficultyMap[difficulty] || 0,
-            icon: (
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                     strokeLinejoin="round" className="mx-auto text-emerald-400">
-                    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
-                </svg>
-            ),
-
-        },
-        {
-            label: "Distanza",
-            value: distance ? Math.min(Number(distance) / 30 * 100, 100) : 0,
-            icon: (
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                     strokeLinejoin="round" className="mx-auto text-sky-400">
-                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                    <polyline points="16 7 22 7 22 13"></polyline>
-                </svg>
-            ),
-        },
-        {
-            label: "Dislivello",
-            value: elevation ? Math.min((Number(elevation) / 2800) *100, 100) : 0,
-            icon: (
-                <img
-                    src={ImgDislivello}
-                    alt=""
-                />
-            ),
-        },
-    ];
 
 
     return (
@@ -144,7 +102,7 @@ export default function CardEscursioniDetail({
                 <EscursioneModalContent
                     title={title}
                     date={date}
-                    data={data}
+                    difficulty={difficulty}
                     distance={distance}
                     elevation={elevation}
                 />
