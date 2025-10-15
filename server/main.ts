@@ -5,6 +5,8 @@ import { Pool } from 'pg'
 import multer from 'multer'
 import { parseGpx } from './utils'
 import authRoutes from './routes/authRoutes';
+import cloudinaryImagesHandler from './cloudinary-images';
+
 
 
 const app = express()
@@ -74,6 +76,7 @@ app.get("/escursioni/all", async (req: Request, res: Response) => {
   }
 })
 
+app.get("/api/cloudinary-images", cloudinaryImagesHandler);
 
 app.put("/escursioni", upload.single('gpxFile'), async (req: Request, res: Response) => {
   try {

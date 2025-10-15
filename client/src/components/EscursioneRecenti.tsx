@@ -3,7 +3,6 @@ import CardEscursioniDetail from "./ui/card-escursioni-detail";
 import type { Escursione } from '../lib/types';
 import { apiConfig } from "../lib/apiConfig";
 
-
 interface FormattedEscursione {
     id: number;
     title: string;
@@ -12,6 +11,7 @@ interface FormattedEscursione {
     photoCount: number;
     distance?: string;
     elevation?: string;
+    imageUrls: string[];
 }
 
 export default function EscursioneRecenti() {
@@ -32,16 +32,17 @@ export default function EscursioneRecenti() {
         }
     };
 
-    const formatEscursioni = (data: Escursione[]): FormattedEscursione[] => {
+    const formatEscursioni = (data: Escursione[], imagesMap: Record<number, string[]>): FormattedEscursione[] => {
         return data
             .map(item => ({
                 id: item.id,
                 title: item.name,
                 date: item.date_escursione ? new Date(item.date_escursione).toISOString().split("T")[0] : "Data non disponibile",
                 difficulty: mapDifficulty(item.difficulty),
-                photoCount: Math.floor(Math.random() * 50) + 10,
+                photoCount: imagesMap[item.id]?.length || 0,
                 distance: item.distance_km != null ? String(item.distance_km) : undefined,
                 elevation: item.elevation_gain_m != null ? String(item.elevation_gain_m) : undefined,
+                imageUrls: imagesMap[item.id] || [],
             }))
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     };
@@ -54,7 +55,25 @@ export default function EscursioneRecenti() {
                     throw new Error("Errore nel caricamento dei dati");
                 }
                 const data = await response.json();
-                setEscursioni(formatEscursioni(data));
+
+                // Fetch immagini per ogni escursione
+                const imagesMap: Record<number, string[]> = {};
+                await Promise.all(
+                    data.map(async (escursione: Escursione) => {
+                        try {
+                            const imageUrl = `${apiConfig.baseUrl}/api/cloudinary-images?escursioneId=${escursione.id}`;
+                            const imageResponse = await fetch(imageUrl);
+                            if (imageResponse.ok) {
+                                const { imageUrls } = await imageResponse.json();
+                                imagesMap[escursione.id] = imageUrls;
+                            }
+                        } catch {
+                            imagesMap[escursione.id] = [];
+                        }
+                    })
+                );
+
+                setEscursioni(formatEscursioni(data, imagesMap));
             } catch {
                 setError("Si è verificato un errore durante il caricamento dei dati");
             } finally {
@@ -76,16 +95,16 @@ export default function EscursioneRecenti() {
     return (
         <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h1 className="text-3xl font-bold text-gray-900 mb-8">Ultime Escursioni</h1>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-x-8 gap-y-12">
                 {escursioni.slice(0,4).map((escursione) => (
                     <CardEscursioniDetail
                         key={escursione.id}
                         title={escursione.title}
                         date={escursione.date}
                         difficulty={escursione.difficulty}
-                        photoCount={escursione.photoCount}
                         distance={escursione.distance}
                         elevation={escursione.elevation}
+                        imageUrls={escursione.imageUrls}
                     />
                 ))}
             </div>
