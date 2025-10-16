@@ -3,7 +3,6 @@ import CardEscursioniDetail from './ui/card-escursioni-detail';
 import type { Escursione } from '../lib/types';
 import { apiConfig } from '../lib/apiConfig';
 
-
 interface FormattedEscursione {
     id: number;
     title: string;
@@ -15,64 +14,61 @@ interface FormattedEscursione {
     imageUrls: string[];
 }
 
-export default function ArchivoEscursioni() {
+const mapDifficulty = (difficulty: string = ''): "Facile" | "Medio" | "Difficile" => {
+    switch (difficulty.trim().toLowerCase()) {
+        case "bassa": return "Facile";
+        case "media": return "Medio";
+        case "alta": return "Difficile";
+        default: return "Medio";
+    }
+};
+
+const formatEscursioni = (
+    data: Escursione[],
+    imagesMap: Record<number, string[]>
+): FormattedEscursione[] =>
+    data.map(item => ({
+        id: item.id,
+        title: item.name,
+        date: item.date_escursione ? new Date(item.date_escursione).toISOString().split('T')[0] : '',
+        difficulty: mapDifficulty(item.difficulty),
+        photoCount: imagesMap[item.id]?.length || 0,
+        distance: item.distance_km != null ? String(item.distance_km) : undefined,
+        elevation: item.elevation_gain_m != null ? String(item.elevation_gain_m) : undefined,
+        imageUrls: imagesMap[item.id] || [],
+    }));
+
+export default function ArchivioEscursioni() {
     const [escursioni, setEscursioni] = useState<FormattedEscursione[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Mappatura delle difficoltà dal server al formato del client
-    const mapDifficulty = (difficulty: string): "Facile" | "Medio" | "Difficile" => {
-        switch(difficulty.toLowerCase()) {
-            case "bassa": return "Facile";
-            case "media": return "Medio";
-            case "alta": return "Difficile";
-            default: return "Medio";
-        }
-    };
-
-
-    // Formatta i dati dell'API nel formato necessario per la card
-    const formatEscursioni = (data: Escursione[], imagesMap: Record<number, string[]>): FormattedEscursione[] => {
-        return data.map(item => ({
-            id: item.id,
-            title: item.name,
-            date: item.date_escursione ? new Date(item.date_escursione).toISOString().split('T')[0] : '',
-            difficulty: mapDifficulty(item.difficulty),
-            photoCount: imagesMap[item.id]?.length || 0,
-            distance: item.distance_km != null ? String(item.distance_km) : undefined,
-            elevation: item.elevation_gain_m != null ? String(item.elevation_gain_m) : undefined,
-            imageUrls: imagesMap[item.id] || [],
-        }));
-    };
-
     useEffect(() => {
         const fetchEscursioni = async () => {
             try {
-                // Fetch delle escursioni
                 const response = await fetch(apiConfig.endpoints.escursioni.getAll);
-                if (!response.ok) {
-                    throw new Error('Errore nel caricamento delle escursioni');
-                }
-                const escursioniData = await response.json();
+                if (!response.ok) throw new Error('Errore nel caricamento delle escursioni');
+                const escursioniData: Escursione[] = await response.json();
 
-                // Crea una mappa di ID escursione -> immagini
+                // Ottimizzazione: recupera tutte le immagini in parallelo e ignora errori singoli
+                const results = await Promise.allSettled(
+                    escursioniData.map(escursione =>
+                        fetch(`${apiConfig.baseUrl}/api/cloudinary-images?escursioneId=${escursione.id}`)
+                            .then(res => res.ok ? res.json() : { imageUrls: [] })
+                            .catch(() => ({ imageUrls: [] }))
+                    )
+                );
+
                 const imagesMap: Record<number, string[]> = {};
-
-                // Fetch immagini per ciascuna escursione
-                await Promise.all(escursioniData.map(async (escursione: Escursione) => {
-                    try {
-                        const imageUrl = `${apiConfig.baseUrl}/api/cloudinary-images?escursioneId=${escursione.id}`;
-                        const imageResponse = await fetch(imageUrl);
-
-                        if (imageResponse.ok) {
-                            const { imageUrls } = await imageResponse.json();
-                            imagesMap[escursione.id] = imageUrls;
-                        }
-                    } catch (err) {
-                        console.error(`Errore nel caricare le immagini per l'escursione ${escursione.id}:`, err);
+                escursioniData.forEach((escursione, idx) => {
+                    const result = results[idx];
+                    if (result.status === 'fulfilled' && Array.isArray(result.value.imageUrls)) {
+                        imagesMap[escursione.id] = result.value.imageUrls;
+                    } else {
                         imagesMap[escursione.id] = [];
                     }
-                }));
+                });
+
                 setEscursioni(formatEscursioni(escursioniData, imagesMap));
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Errore sconosciuto');
@@ -83,7 +79,6 @@ export default function ArchivoEscursioni() {
 
         fetchEscursioni();
     }, []);
-
 
     if (loading) return <div className="max-w-7xl mx-auto px-4 py-12 text-center">Caricamento in corso...</div>;
     if (error) return <div className="max-w-7xl mx-auto px-4 py-12 text-center text-red-600">Errore: {error}</div>;

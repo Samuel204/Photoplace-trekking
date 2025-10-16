@@ -3,7 +3,6 @@ import { apiConfig } from "../lib/apiConfig";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-
 const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY || '';
 
 interface LocationData {
@@ -18,71 +17,71 @@ export default function EscursioniMaps() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const mapRef = useRef<HTMLDivElement>(null);
+    const mapInstance = useRef<mapboxgl.Map | null>(null);
 
     useEffect(() => {
-        const fetchLocations = async () => {
-            try {
-                const response = await fetch(apiConfig.endpoints.escursioni.locations);
-                if (!response.ok) {
-                    throw new Error("Errore nel caricamento delle posizioni");
+        const controller = new AbortController();
+        setLoading(true);
+        fetch(apiConfig.endpoints.escursioni.locations, { signal: controller.signal })
+            .then(res => {
+                if (!res.ok) throw new Error("Errore nel caricamento delle posizioni");
+                return res.json();
+            })
+            .then(data => setLocations(data))
+            .catch(err => {
+                if (err.name !== "AbortError") {
+                    setError(err instanceof Error ? err.message : "Errore sconosciuto");
                 }
-                const data = await response.json();
-                setLocations(data);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "Errore sconosciuto");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchLocations();
+            })
+            .finally(() => setLoading(false));
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {
         if (!loading && !error && locations.length > 0 && mapRef.current) {
-            // inizializzare la mappa con i dati caricati
-            initializeMap();
-        }
-    }, [loading, error, locations]);
-
-    const initializeMap = () => {
-        const mapContainer = document.getElementById("map") as HTMLDivElement;
-
-        function getCenter(points: LocationData[]) {
-            let sumLat = 0;
-            let sumLng = 0;
-            points.forEach(p => {
-                sumLat += parseFloat(p.start_latitude);
-                sumLng += parseFloat(p.start_longitude);
-            });
-            return {
-                latitude: sumLat / points.length,
-                longitude: sumLng / points.length
+            if (mapInstance.current) {
+                mapInstance.current.remove();
+                mapInstance.current = null;
+            }
+            const getCenter = (points: LocationData[]) => {
+                let sumLat = 0, sumLng = 0;
+                points.forEach(p => {
+                    sumLat += parseFloat(p.start_latitude);
+                    sumLng += parseFloat(p.start_longitude);
+                });
+                return {
+                    latitude: sumLat / points.length,
+                    longitude: sumLng / points.length
+                };
             };
+            const centerPoint = getCenter(locations);
+
+            mapboxgl.accessToken = MAPBOX_API_KEY;
+            const map = new mapboxgl.Map({
+                container: mapRef.current,
+                style: 'mapbox://styles/mapbox/satellite-v9',
+                center: [centerPoint.longitude, centerPoint.latitude],
+                zoom: 4
+            });
+            locations.forEach(loc => {
+                new mapboxgl.Marker()
+                    .setLngLat([parseFloat(loc.start_longitude), parseFloat(loc.start_latitude)])
+                    .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`
+                        <div style="font-family: Arial, sans-serif; font-size: 14px;">
+                            <strong style="color: #2c7a7b;">${loc.name}</strong><br>
+                        </div>
+                    `))
+                    .addTo(map);
+            });
+            mapInstance.current = map;
         }
-
-        const centerPoint = getCenter(locations);
-
-        mapboxgl.accessToken = MAPBOX_API_KEY;
-        const map = new mapboxgl.Map({
-        container: mapContainer, // your container ID
-        style: 'mapbox://styles/mapbox/satellite-v9', // map style
-        center: [centerPoint.longitude, centerPoint.latitude], // starting position [lng, lat]
-        zoom: 4 // starting zoom
-        });
-
-        // Fore every location, add a marker
-        locations.forEach(loc => {
-            new mapboxgl.Marker()
-            .setLngLat([parseFloat(loc.start_longitude), parseFloat(loc.start_latitude)])
-            .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`
-                <div style="font-family: Arial, sans-serif; font-size: 14px;">
-                    <strong style="color: #2c7a7b;">${loc.name}</strong><br>
-                </div>
-            `))
-            .addTo(map);
-        });
-    };
+        return () => {
+            if (mapInstance.current) {
+                mapInstance.current.remove();
+                mapInstance.current = null;
+            }
+        };
+    }, [loading, error, locations]);
 
     return (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 z-20 mt-10">
@@ -102,7 +101,7 @@ export default function EscursioniMaps() {
                     <div className="h-96 bg-gradient-to-br from-emerald-100 to-sky-100 flex items-center justify-center">
                         {loading && <p>Caricamento della mappa...</p>}
                         {error && <p className="text-red-600">Errore: {error}</p>}
-                        <div id="map" ref={mapRef} className="w-full h-full"></div>
+                        <div ref={mapRef} className="w-full h-full" id="map"></div>
                     </div>
                     <link href='https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css' rel='stylesheet' />
                 </div>

@@ -1,66 +1,55 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DirectionAwareHover } from "./ui/direction-aware-hover.tsx";
 import { apiConfig } from '../lib/apiConfig';
-import type {Escursione} from "../lib/types.ts";
+import type { Escursione } from "../lib/types.ts";
+
 
 
 export default function HomePage() {
-    const [escursioniCount, setEscursioniCount] = useState<number>(0);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [totalDistance, setTotalDistance] = useState<number>(0);
-    const [averageElevation, setAverageElevation] = useState<number>(0);
-
+    const [escursioni, setEscursioni] = useState<Escursione[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const imageUrl =
         "https://images.unsplash.com/photo-1663765970236-f2acfde22237?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
     useEffect(() => {
-        let isMounted = true;
-        const fetchEscursioniData = async () => {
-            try {
-                const response = await fetch(apiConfig.endpoints.escursioni.getAll);
-                if (!response.ok) {
-                    throw new Error('Errore nel caricamento delle escursioni');
-                }
-                const data = await response.json();
-                if (isMounted) {
-                    setEscursioniCount(data.length);
-
-                    // Calcola la distanza totale km
-                    const totalKm = data.reduce((sum: number, escursione: Escursione) => {
-                        return sum + (escursione.distance_km ? Number(escursione.distance_km) : 0);
-                    }, 0);
-
-                    //Calcolo media disliveli
-                    const dislivelloEscursioni = data.filter((escursione: Escursione) =>
-                        escursione.elevation_gain_m && Number(escursione.elevation_gain_m) > 0
-                    );
-                    let avgElev = 0;
-                    if(dislivelloEscursioni.length > 0){
-                        const totalElev = dislivelloEscursioni.reduce((sum: number, escursione: Escursione) => {
-                            return sum + Number(escursione.elevation_gain_m);
-                            }, 0);
-                        avgElev = totalElev / dislivelloEscursioni.length;
-                    }
-                    setTotalDistance(totalKm);
-                    setAverageElevation(avgElev);
-                }
-            } catch (err) {
-                if (isMounted) {
+        const controller = new AbortController();
+        setLoading(true);
+        fetch(apiConfig.endpoints.escursioni.getAll, { signal: controller.signal })
+            .then(res => {
+                if (!res.ok) throw new Error('Errore nel caricamento delle escursioni');
+                return res.json();
+            })
+            .then(data => setEscursioni(data))
+            .catch(err => {
+                if (err.name !== 'AbortError') {
                     console.error('Errore durante il recupero dei dati escursioni:', err);
                 }
-            } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
-        };
-
-        fetchEscursioniData();
-        return () => {
-            isMounted = false;
-        };
+            })
+            .finally(() => setLoading(false));
+        return () => controller.abort();
     }, []);
+
+    // Calcoli solo se i dati sono disponibili
+    const escursioniCount = escursioni.length;
+    const totalDistance = useMemo(
+        () => escursioni.reduce((sum, e) => sum + (e.distance_km ? Number(e.distance_km) : 0), 0),
+        [escursioni]
+    );
+
+    const dislivelloEscursioni = useMemo(
+        () => escursioni.filter(e => e.elevation_gain_m && Number(e.elevation_gain_m) > 0),
+        [escursioni]
+    );
+
+    const averageElevation = useMemo(
+        () =>
+            dislivelloEscursioni.length > 0
+                ? dislivelloEscursioni.reduce((sum, e) => sum + Number(e.elevation_gain_m), 0) /
+                dislivelloEscursioni.length
+                : 0,
+        [dislivelloEscursioni]
+    );
 
     return (
         <section className="relative bg-black overflow-hidden">
@@ -122,7 +111,7 @@ export default function HomePage() {
                                         <polyline points="16 7 22 7 22 13"></polyline>
                                     </svg>
                                     <div className="text-2xl font-bold text-white">
-                                        {loading ? '...' : `${typeof totalDistance === 'number' ? totalDistance.toFixed(1) : '0'} km`}
+                                        {loading ? '...' : `${totalDistance.toFixed(1)} km`}
                                     </div>
                                     <span className="text-sm text-sky-200">Distanza</span>
                                 </div>
