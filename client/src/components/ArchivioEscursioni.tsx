@@ -2,41 +2,8 @@ import { useState, useEffect } from 'react';
 import CardEscursioniDetail from './ui/card-escursioni-detail';
 import type { Escursione } from '../lib/types';
 import { apiConfig } from '../lib/apiConfig';
+import { formatEscursioni, FormattedEscursione } from '../lib/escursioniUtils.ts';
 
-interface FormattedEscursione {
-    id: number;
-    title: string;
-    date: string;
-    difficulty: "Facile" | "Medio" | "Difficile";
-    photoCount: number;
-    distance?: string;
-    elevation?: string;
-    imageUrls: string[];
-}
-
-const mapDifficulty = (difficulty: string = ''): "Facile" | "Medio" | "Difficile" => {
-    switch (difficulty.trim().toLowerCase()) {
-        case "bassa": return "Facile";
-        case "media": return "Medio";
-        case "alta": return "Difficile";
-        default: return "Medio";
-    }
-};
-
-const formatEscursioni = (
-    data: Escursione[],
-    imagesMap: Record<number, string[]>
-): FormattedEscursione[] =>
-    data.map(item => ({
-        id: item.id,
-        title: item.name,
-        date: item.date_escursione ? new Date(item.date_escursione).toISOString().split('T')[0] : '',
-        difficulty: mapDifficulty(item.difficulty),
-        photoCount: imagesMap[item.id]?.length || 0,
-        distance: item.distance_km != null ? String(item.distance_km) : undefined,
-        elevation: item.elevation_gain_m != null ? String(item.elevation_gain_m) : undefined,
-        imageUrls: imagesMap[item.id] || [],
-    }));
 
 export default function ArchivioEscursioni() {
     const [escursioni, setEscursioni] = useState<FormattedEscursione[]>([]);
@@ -96,6 +63,7 @@ export default function ArchivioEscursioni() {
                         distance={escursione.distance}
                         elevation={escursione.elevation}
                         imageUrls={escursione.imageUrls}
+                        duration={escursione.duration}
                     />
                 ))}
             </div>

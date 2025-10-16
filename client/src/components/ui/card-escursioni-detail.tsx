@@ -3,6 +3,7 @@ import DragCloseModal from "./modal-drag.tsx";
 import EscursioneModalContent from "./escursione-modal-content.tsx";
 import { LiaMapMarkedAltSolid } from "react-icons/lia";
 import { TbListDetails } from "react-icons/tb";
+import {getCloudinaryImage} from "../../lib/cloudinaryUtils.ts";
 
 interface CardEscursioniDetailProps {
     title: string;
@@ -27,7 +28,7 @@ export default function CardEscursioniDetail({
                                              }: CardEscursioniDetailProps) {
     const [open, setOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState(0);
-    const defaultImage = "https://res.cloudinary.com/dfurhhwta/image/upload/f_auto,q_auto:eco/v1733508339/Asiago_2.jpg";
+    const defaultImage = getCloudinaryImage('Asiago_2', { maxWidth: 900 }).toURL();
     const finalImageUrls = imageUrls.length > 0 ? imageUrls : [defaultImage];
 
     const getDifficultyColor = (difficulty: string) => {
