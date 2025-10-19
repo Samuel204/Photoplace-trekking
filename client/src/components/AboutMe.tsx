@@ -32,28 +32,30 @@ const AboutMeContent = () => {
     const currentMedia = AboutMeMediaData.image;
 
     return (
-        <div className='max-w-4xl mx-auto'>
+        <div className='max-w-3xl md:max-w-5xl mx-auto  shadow-xs bg-black/10 backdrop-blur-xl py-5 px-5 rounded-lg'>
 
-            <div className="flex flex-row gap-4">
-                <h2 className='text-3xl font-bold mb-6 text-black'>
+            <div className="flex flex-row justify-between mb-5">
+                <h2 className='text-3xl font-bold text-black'>
                     About Me
                 </h2>
-                <span
-                    className="flex items-center justify-center rounded-lg bg-black/10 backdrop-blur-xl border border-white/10 hover:bg-gray-300 duration-300 transition-colors size-9 size-10">
-                    <a href="mailto:info@davidbabic.com">
-                        <MdEmail className="size-5 md:size-6 text-gray-900"/>
-                    </a>
-                </span>
-                <span className="flex items-center justify-center rounded-lg bg-black/20 backdrop-blur-xl border border-white/10 hover:bg-gray-300 duration-300 transition-colors size-9 size-10">
-                    <a href="https://www.instagram.com/davidbabicc/">
-                        <FaSquareInstagram className="size-5 md:size-6 text-gray-900"/>
-                    </a>
-                </span>
-                <span className="flex items-center justify-center rounded-lg bg-black/10 backdrop-blur-xl border border-white/10 hover:bg-gray-300 duration-300 transition-colors size-9 size-10">
-                    <a href="https://www.linkedin.com/in/davidbabicc/">
-                        <ImLinkedin className="size-4 md:size-5 text-gray-900"/>
-                    </a>
-                </span>
+                <div className="flex gap-3">
+                    <span
+                        className="flex items-center justify-center shadow-sm border border-gray-400 rounded-lg duration-300 transition-colors size-10">
+                        <a href="mailto:info@davidbabic.com">
+                            <MdEmail className="size-5 md:size-6 text-gray-900"/>
+                        </a>
+                    </span>
+                    <span className="flex items-center justify-center shadow-sm border border-gray-400 rounded-lg duration-300 transition-colors size-10">
+                        <a href="https://www.instagram.com/davidbabicc/">
+                            <FaSquareInstagram className="size-5 md:size-6 text-gray-900"/>
+                        </a>
+                    </span>
+                    <span className="flex items-center justify-center shadow-sm border border-gray-400 rounded-lg duration-300 transition-colors size-10">
+                        <a href="https://www.linkedin.com/in/davidbabicc/">
+                            <ImLinkedin className="size-4 md:size-5 text-gray-900"/>
+                        </a>
+                    </span>
+                </div>
             </div>
             <p className='text-lg mb-8 text-black '>
                 {currentMedia.about.overview}

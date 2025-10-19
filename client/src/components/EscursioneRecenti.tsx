@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CardEscursioniDetail from "./ui/card-escursioni-detail";
 import type { Escursione } from '../lib/types';
 import { apiConfig } from "../lib/apiConfig";
-import { formatEscursioni, FormattedEscursione } from '../lib/escursioniUtils.ts';
+import { formatEscursioni, type FormattedEscursione } from '../lib/escursioniUtils';
 
 
 export default function EscursioneRecenti() {
